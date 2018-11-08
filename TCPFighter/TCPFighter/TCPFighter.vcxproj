@@ -149,6 +149,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BaseObject.h" />
+    <ClInclude Include="EffectObject.h" />
     <ClInclude Include="LinkedList.h" />
     <ClInclude Include="PlayerObject.h" />
     <ClInclude Include="Resource.h" />
@@ -160,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseObject.cpp" />
+    <ClCompile Include="EffectObject.cpp" />
     <ClCompile Include="PlayerObject.cpp" />
     <ClCompile Include="ScreenDIB.cpp" />
     <ClCompile Include="Sprite.cpp" />
