@@ -16,6 +16,7 @@ public:
 	void SetDirection(int direction);
 	void SetHP(char hp);
 	char GetHP() { return m_chHP; }
+	void ActionInput(DWORD dwAction);
 
 
 protected:
@@ -25,9 +26,7 @@ protected:
 	void SetActionMove();
 	void SetActionStand();
 
-
 	void InputActionProc();
-
 
 
 protected:
