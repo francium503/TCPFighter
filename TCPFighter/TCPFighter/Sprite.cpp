@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Sprite.h"
-#include <stdio.h>
 
 Sprite::Sprite(int iMaxSprtie, DWORD dwColorKey)
 {
@@ -21,7 +20,6 @@ Sprite::~Sprite()
 BOOL Sprite::LoadDibSprite(int iSpriteIndex, WCHAR* szFileName, int iCenterPointX, int iCenterPointY)
 {
 	FILE* file;
-	DWORD dwRead;
 	int iPitch;
 	int iImageSize;
 	BITMAPFILEHEADER stFileHeader;
@@ -47,27 +45,32 @@ BOOL Sprite::LoadDibSprite(int iSpriteIndex, WCHAR* szFileName, int iCenterPoint
 		return false;
 	}
 
+
+	int bit = stInfoHeader.biBitCount / 8;
+
+	iPitch = (stInfoHeader.biWidth * bit + 3) & ~3;
+	iImageSize = iPitch * stInfoHeader.biHeight;
+
 	m_stpSprite[iSpriteIndex].iWidth = stInfoHeader.biWidth;
 	m_stpSprite[iSpriteIndex].iHeight = stInfoHeader.biHeight;
-	//m_stpSprite[iSpriteIndex].iPitch = (stInfoHeader.biWidth + 3) & ~3;
-	m_stpSprite[iSpriteIndex].iPitch = stInfoHeader.biWidth;
+	m_stpSprite[iSpriteIndex].iPitch = iPitch;
 	m_stpSprite[iSpriteIndex].iCenterPointX = iCenterPointX;
 	m_stpSprite[iSpriteIndex].iCenterPointY = iCenterPointY;
 
-	int bit = stInfoHeader.biBitCount / 8;
-	BYTE *tmp = new BYTE[m_stpSprite[iSpriteIndex].iPitch * stInfoHeader.biHeight * bit];
-	m_stpSprite[iSpriteIndex].bypImage = new BYTE[m_stpSprite[iSpriteIndex].iPitch * stInfoHeader.biHeight * bit];
+	BYTE *tmp = new BYTE[iImageSize];
+	BYTE *spriteTmp = m_stpSprite[iSpriteIndex].bypImage = new BYTE[iImageSize];
 
-	fread(tmp, m_stpSprite[iSpriteIndex].iPitch * stInfoHeader.biHeight * bit, 1, file);
+	fread(tmp, m_stpSprite[iSpriteIndex].iPitch * stInfoHeader.biHeight, 1, file);
 
+	BYTE *backtmp = tmp + iPitch * (stInfoHeader.biHeight - 1);
 
-	for (int i = 0; i < stInfoHeader.biHeight; ++i)
+	for(int i =0;i<stInfoHeader.biHeight; ++i)
 	{
-		for (int j = 0; j < m_stpSprite[iSpriteIndex].iPitch * bit; j++)
-		{
-			m_stpSprite[iSpriteIndex].bypImage[i*m_stpSprite[iSpriteIndex].iPitch*bit + j] = tmp[(stInfoHeader.biHeight - i - 1)*m_stpSprite[iSpriteIndex].iPitch*bit + j];
-		}
+		memcpy(spriteTmp, backtmp, iPitch);
+		spriteTmp += iPitch;
+		backtmp -= iPitch;
 	}
+
 
 	fclose(file);
 
@@ -130,7 +133,7 @@ void Sprite::DrawSprite(int iSpriteIndex, int iDrawX, int iDrawY, BYTE* bypDest,
 	if (DrawX > iDestWidth || DrawY > iDestHeight)
 		return;
 
-	bypDest += ((DrawY * iDestPitch) + DrawX) * 4;
+	bypDest += ((DrawY * iDestPitch) + DrawX * 4);
 
 	for (int y = 0; y < spriteHeight; ++y)
 	{
@@ -147,8 +150,8 @@ void Sprite::DrawSprite(int iSpriteIndex, int iDrawX, int iDrawY, BYTE* bypDest,
 			bypDest += 4;
 		}
 
-		bypDest += (iDestPitch - spriteWidth) * 4;
-		sprite += (spritePitch - spriteWidth) * 4;
+		bypDest += (iDestPitch - spriteWidth * 4);
+		sprite += (spritePitch - spriteWidth * 4);
 	}
 
 }
@@ -167,7 +170,6 @@ void Sprite::DrawImage(int iSpriteIndex, int iDrawX, int iDrawY, BYTE* bypDest, 
 	int spritePitch = m_stpSprite[iSpriteIndex].iPitch;
 	BYTE* sprite = m_stpSprite[iSpriteIndex].bypImage;
 
-
 	bypDest += ((iDrawY * iDestPitch) + iDrawX) * 4;
 
 	for (int y = 0; y < spriteHeight; ++y)
@@ -185,6 +187,6 @@ void Sprite::DrawImage(int iSpriteIndex, int iDrawX, int iDrawY, BYTE* bypDest, 
 			bypDest += 4;
 		}
 
-		bypDest += (iDestPitch - spritePitch) * 4;
+		bypDest += (iDestPitch - spritePitch);
 	}
 }

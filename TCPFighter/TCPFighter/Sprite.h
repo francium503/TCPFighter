@@ -2,7 +2,7 @@
 class Sprite
 {
 public:
-	typedef struct st_SPRITE{
+	struct st_SPRITE{
 		BYTE* bypImage = nullptr;
 		int iWidth;
 		int iHeight;
