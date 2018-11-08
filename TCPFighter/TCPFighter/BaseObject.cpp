@@ -4,11 +4,29 @@
 
 BaseObject::BaseObject()
 {
+	m_iCurX = 0;
+	m_iCurY = 0;
+	m_iObjectID = 0;
+	m_eObjectType = ObjectType::Player;
+	m_iOldX = 0;
+	m_iOldY = 0;
+	m_dwActionInput = 0;
+	m_bEndFrame = 0;
+	m_iDelayCount = 0;
+	m_iFrameDelay = 0;
+	m_iSpriteEnd = 0;
+	m_iSpriteNow = 0;
+	m_iSpriteStart = 0;
 }
 
 
 BaseObject::~BaseObject()
 {
+}
+
+void BaseObject::ActionInput(DWORD dwAction)
+{
+	m_dwActionInput = dwAction;
 }
 
 void BaseObject::NextFrame()
@@ -35,10 +53,8 @@ void BaseObject::NextFrame()
 
 void BaseObject::SetCurPosition(int x, int y)
 {
-	SetOldPosition(m_iCurX, m_iCurY);
-
-	m_iOldX = x;
-	m_iOldY = y;
+	m_iCurX = x;
+	m_iCurY = y;
 }
 
 void BaseObject::SetObjectID(int objectID)

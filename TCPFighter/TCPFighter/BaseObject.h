@@ -14,10 +14,10 @@ public:
 	virtual ~BaseObject();
 
 	virtual void Action() = 0;
-	virtual void Draw() = 0;
-	void ActionInput();
+	virtual void Draw(BYTE* bypDest, int iDestWidth, int iDestHeight, int iDestPitch) = 0;
+	void ActionInput(DWORD dwAction);
 	void NextFrame();
-	BOOL isEndFrame() { return m_bEndFrame; }
+	BOOL IsEndFrame() { return m_bEndFrame; }
 
 	int GetCurX() { return m_iCurX; }
 	int GetCurY() { return m_iCurY; }

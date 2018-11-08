@@ -4,18 +4,18 @@ class PlayerObject :
 	public BaseObject
 {
 public:
-	PlayerObject();
+	PlayerObject(BOOL isPlayer);
 	~PlayerObject();
 
 
 	void Action() override;
 	void ActionProc();
-	void Draw() override;
-	int GetDirection();
-	BOOL IsPlayer();
+	void Draw(BYTE* bypDest, int iDestWidth, int iDestHeight, int iDestPitch) override;
+	int GetDirection() { return m_iDirCur; }
+	BOOL IsPlayer() { return m_bPlayerCharacter; }
 	void SetDirection(int direction);
 	void SetHP(char hp);
-
+	char GetHP() { return m_chHP; }
 
 
 protected:
@@ -24,6 +24,9 @@ protected:
 	void SetActionAttack3();
 	void SetActionMove();
 	void SetActionStand();
+
+
+	void InputActionProc();
 
 
 

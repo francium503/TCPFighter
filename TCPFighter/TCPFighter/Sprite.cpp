@@ -135,25 +135,101 @@ void Sprite::DrawSprite(int iSpriteIndex, int iDrawX, int iDrawY, BYTE* bypDest,
 
 	bypDest += ((DrawY * iDestPitch) + DrawX * 4);
 
+	DWORD* pDest = reinterpret_cast<DWORD*>(bypDest);
+	DWORD* pSrc = reinterpret_cast<DWORD*>(sprite);
+	BYTE *pDestOrigin = reinterpret_cast<BYTE*>(pDest);
+	BYTE *pSpriteOrigin = static_cast<BYTE*>(sprite);
+
 	for (int y = 0; y < spriteHeight; ++y)
 	{
+		pDest = reinterpret_cast<DWORD*>(pDestOrigin);
+		pSrc = static_cast<DWORD*>(pSrc);
+
 		for (int x = 0; x < spriteWidth; ++x)
 		{
-			if ((*reinterpret_cast<DWORD*>(sprite) & 0x00ffffff) != m_dwColorKey)
+			if ((*reinterpret_cast<DWORD*>(pSrc) & 0x00ffffff) != m_dwColorKey)
 			{
-				*(bypDest + 0) = *(sprite + 0);
-				*(bypDest + 1) = *(sprite + 1);
-				*(bypDest + 2) = *(sprite + 2);
-				*(bypDest + 3) = *(sprite + 3);
+				*pDest = *pSrc;
 			}
-			sprite += 4;
-			bypDest += 4;
+
+			pDest++;
+			pSrc++;
 		}
 
-		bypDest += (iDestPitch - spriteWidth * 4);
-		sprite += (spritePitch - spriteWidth * 4);
+		pDestOrigin += iDestPitch;
+		pSpriteOrigin += spritePitch;
+	}
+}
+
+void Sprite::DrawSprite50(int iSpriteIndex, int iDrawX, int iDrawY, BYTE* bypDest, int iDestWidth, int iDestHeight,
+	int iDestPitch, int iDrawLen)
+{
+	if (iSpriteIndex >= m_iMaxSprite)
+		return;
+
+	if (m_stpSprite[iSpriteIndex].bypImage == nullptr)
+		return;
+
+	int spriteHeight = m_stpSprite[iSpriteIndex].iHeight;
+	int spriteWidth = m_stpSprite[iSpriteIndex].iWidth;
+	int spritePitch = m_stpSprite[iSpriteIndex].iPitch;
+	BYTE* sprite = m_stpSprite[iSpriteIndex].bypImage;
+	int DrawX = iDrawX - m_stpSprite[iSpriteIndex].iCenterPointX;
+	int DrawY = iDrawY - m_stpSprite[iSpriteIndex].iCenterPointY;
+
+	if (iDrawX - m_stpSprite[iSpriteIndex].iCenterPointX < 0)
+	{
+		sprite += -(iDrawX - m_stpSprite[iSpriteIndex].iCenterPointX) * 4;
+		spriteWidth -= -(iDrawX - m_stpSprite[iSpriteIndex].iCenterPointX);
+		DrawX = 0;
 	}
 
+	if (iDrawX - m_stpSprite[iSpriteIndex].iCenterPointX + spriteWidth > iDestWidth)
+	{
+		spriteWidth -= iDrawX - m_stpSprite[iSpriteIndex].iCenterPointX + spriteWidth - iDestWidth;
+	}
+
+	if (iDrawY - m_stpSprite[iSpriteIndex].iCenterPointY < 0)
+	{
+		sprite += -(iDrawY - m_stpSprite[iSpriteIndex].iCenterPointY) * m_stpSprite[iSpriteIndex].iWidth * 4;
+		spriteHeight -= -(iDrawY - m_stpSprite[iSpriteIndex].iCenterPointY);
+		DrawY = 0;
+	}
+
+	if (iDrawY - m_stpSprite[iSpriteIndex].iCenterPointY + spriteHeight > iDestHeight)
+	{
+		spriteHeight -= iDrawY - m_stpSprite[iSpriteIndex].iCenterPointY + spriteHeight - iDestHeight;
+	}
+
+	if (DrawX > iDestWidth || DrawY > iDestHeight)
+		return;
+
+	bypDest += ((DrawY * iDestPitch) + DrawX * 4);
+
+	DWORD* pDest = reinterpret_cast<DWORD*>(bypDest);
+	DWORD* pSrc = reinterpret_cast<DWORD*>(sprite);
+	BYTE *pDestOrigin = reinterpret_cast<BYTE*>(pDest);
+	BYTE *pSpriteOrigin = static_cast<BYTE*>(sprite);
+
+	for (int y = 0; y < spriteHeight; ++y)
+	{
+		pDest = reinterpret_cast<DWORD*>(pDestOrigin);
+		pSrc = static_cast<DWORD*>(pSrc);
+
+		for (int x = 0; x < spriteWidth; ++x)
+		{
+			if ((*reinterpret_cast<DWORD*>(pSrc) & 0x00ffffff) != m_dwColorKey)
+			{
+				*pDest = *pSrc & 0x7f7f7f7f + *pDest & 0x7f7f7f7f;
+			}
+
+			pDest++;
+			pSrc++;
+		}
+
+		pDestOrigin += iDestPitch;
+		pSpriteOrigin += spritePitch;
+	}
 }
 
 void Sprite::DrawImage(int iSpriteIndex, int iDrawX, int iDrawY, BYTE* bypDest, int iDestWidth, int iDestHeight,
@@ -172,21 +248,28 @@ void Sprite::DrawImage(int iSpriteIndex, int iDrawX, int iDrawY, BYTE* bypDest, 
 
 	bypDest += ((iDrawY * iDestPitch) + iDrawX) * 4;
 
+	DWORD* pDest = reinterpret_cast<DWORD*>(bypDest);
+	DWORD* pSrc = reinterpret_cast<DWORD*>(sprite);
+	BYTE *pDestOrigin = reinterpret_cast<BYTE*>(pDest);
+	BYTE *pSpriteOrigin = static_cast<BYTE*>(sprite);
+
 	for (int y = 0; y < spriteHeight; ++y)
 	{
-		for (int x = 0; x < spritePitch; ++x)
+		pDest = reinterpret_cast<DWORD*>(pDestOrigin);
+		pSrc = static_cast<DWORD*>(pSrc);
+
+		for (int x = 0; x < spriteWidth; ++x)
 		{
 			if ((*reinterpret_cast<DWORD*>(sprite) & 0x00ffffff) != m_dwColorKey)
 			{
-				*(bypDest + 0) = *(sprite + 0);
-				*(bypDest + 1) = *(sprite + 1);
-				*(bypDest + 2) = *(sprite + 2);
-				*(bypDest + 3) = *(sprite + 3);
+				*pDest = *pSrc;
 			}
-			sprite += 4;
-			bypDest += 4;
+
+			pDest++;
+			pSrc++;
 		}
 
-		bypDest += (iDestPitch - spritePitch);
+		pDestOrigin += iDestPitch;
+		pSpriteOrigin += spritePitch;
 	}
 }
