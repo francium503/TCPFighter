@@ -16,6 +16,7 @@ EffectObject::~EffectObject()
 void EffectObject::Action()
 {
 	//TODO 이펙트 액션에서 뭐해야하지;
+	//아직 없음
 
 
 	NextFrame();
