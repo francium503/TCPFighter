@@ -45,6 +45,26 @@ void PlayerObject::ActionProc()
 		break;
 
 	case dfACTION_MOVE_LU:
+		m_iCurX -= 2;
+		m_iCurY -= 3;
+
+		m_iDirCur = TRUE;
+
+		SetActionMove();
+
+		if (m_iCurX <= dfRANGE_MOVE_LEFT)
+		{
+			SetActionStand();
+			m_dwActionInput = dfACTION_STAND;
+			m_iCurX = dfRANGE_MOVE_LEFT;
+		}
+		if (m_iCurY <= dfRANGE_MOVE_TOP)
+		{
+			SetActionStand();
+			m_dwActionInput = dfACTION_STAND;
+			m_iCurY = dfRANGE_MOVE_TOP;
+		}
+		break;
 	case dfACTION_MOVE_UU:
 		m_iCurY -= 3;
 		SetActionMove();
@@ -58,6 +78,25 @@ void PlayerObject::ActionProc()
 		break;
 
 	case dfACTION_MOVE_RU:
+		m_iCurY -= 3;
+		m_iCurX += 2;
+
+		m_iDirCur = FALSE;
+		SetActionMove();
+
+		if (m_iCurX >= dfRANGE_MOVE_RIGHT)
+		{
+			SetActionStand();
+			m_dwActionInput = dfACTION_STAND;
+			m_iCurX = dfRANGE_MOVE_RIGHT;
+		}
+		if (m_iCurY <= dfRANGE_MOVE_TOP)
+		{
+			SetActionStand();
+			m_dwActionInput = dfACTION_STAND;
+			m_iCurY = dfRANGE_MOVE_TOP;
+		}
+		break;
 	case dfACTION_MOVE_RR:
 		m_iCurX += 2;
 
@@ -73,6 +112,25 @@ void PlayerObject::ActionProc()
 		break;
 
 	case dfACTION_MOVE_RD:
+		m_iCurY += 3;
+		m_iCurX += 2;
+
+		m_iDirCur = FALSE;
+		SetActionMove();
+
+		if (m_iCurX <= dfRANGE_MOVE_LEFT)
+		{
+			SetActionStand();
+			m_dwActionInput = dfACTION_STAND;
+			m_iCurX = dfRANGE_MOVE_LEFT;
+		}
+		if (m_iCurY >= dfRANGE_MOVE_BOTTOM)
+		{
+			SetActionStand();
+			m_dwActionInput = dfACTION_STAND;
+			m_iCurY = dfRANGE_MOVE_BOTTOM;
+		}
+		break;
 	case dfACTION_MOVE_DD:
 		m_iCurY += 3;
 		SetActionMove();
@@ -87,6 +145,25 @@ void PlayerObject::ActionProc()
 
 
 	case dfACTION_MOVE_LD:
+		m_iCurY += 3;
+		m_iCurX -= 2;
+
+		m_iDirCur = TRUE;
+		SetActionMove();
+
+		if (m_iCurX >= dfRANGE_MOVE_RIGHT)
+		{
+			SetActionStand();
+			m_dwActionInput = dfACTION_STAND;
+			m_iCurX = dfRANGE_MOVE_RIGHT;
+		}
+		if (m_iCurY >= dfRANGE_MOVE_BOTTOM)
+		{
+			SetActionStand();
+			m_dwActionInput = dfACTION_STAND;
+			m_iCurY = dfRANGE_MOVE_BOTTOM;
+		}
+		break;
 
 	case dfACTION_ATTACK1:
 	case dfACTION_ATTACK2:
@@ -96,6 +173,11 @@ void PlayerObject::ActionProc()
 			SetActionStand();
 			m_dwActionInput = dfACTION_STAND;
 		}
+		break;
+
+	case dfACTION_STAND:
+		SetActionStand();
+
 		break;
 
 	default:
@@ -152,18 +234,31 @@ void PlayerObject::SetActionAttack3()
 
 void PlayerObject::SetActionMove()
 {
-	if (m_iDirCur)
+	if (m_iDirCur) {
+		if (m_iSpriteNow >= ePLAYER_MOVE_L01 && m_iSpriteNow <= ePLAYER_MOVE_L12)
+			return;
 		SetSprite(ePLAYER_MOVE_L01, ePLAYER_MOVE_L12, 4);
-	else
+	}
+	else {
+		if (m_iSpriteNow >= ePLAYER_MOVE_R01 && m_iSpriteNow <= ePLAYER_MOVE_R12)
+			return;
 		SetSprite(ePLAYER_MOVE_R01, ePLAYER_MOVE_R12, 4);
+	}
 }
 
 void PlayerObject::SetActionStand()
 {
-	if(m_iDirCur)
+	if (m_iDirCur)
+	{
+		if (m_iSpriteNow >= ePLAYER_STAND_L01 && m_iSpriteNow <= ePLAYER_STAND_L03)
+			return;
 		SetSprite(ePLAYER_STAND_L01, ePLAYER_STAND_L03, 5);
-	else
+	}
+	else {
+		if (m_iSpriteNow >= ePLAYER_STAND_R01 && m_iSpriteNow <= ePLAYER_STAND_R03)
+			return;
 		SetSprite(ePLAYER_STAND_R01, ePLAYER_STAND_R03, 5);
+	}
 }
 
 void PlayerObject::InputActionProc()
