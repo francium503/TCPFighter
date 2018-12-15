@@ -106,51 +106,49 @@ void Sprite::DrawSprite(int iSpriteIndex, int iDrawX, int iDrawY, BYTE* bypDest,
 	int DrawX = iDrawX - m_stpSprite[iSpriteIndex].iCenterPointX;
 	int DrawY = iDrawY - m_stpSprite[iSpriteIndex].iCenterPointY;
 
-	if(iDrawX - m_stpSprite[iSpriteIndex].iCenterPointX < 0)
+	if(DrawX < 0)
 	{
-		sprite += -(iDrawX - m_stpSprite[iSpriteIndex].iCenterPointX) * 4;
-		spriteWidth -= -(iDrawX - m_stpSprite[iSpriteIndex].iCenterPointX);
+		sprite -= DrawX * 4;
+		spriteWidth += DrawX;
 		DrawX = 0;
 	}
 
-	if(iDrawX - m_stpSprite[iSpriteIndex].iCenterPointX + spriteWidth > iDestWidth)
+	if(DrawX + spriteWidth > iDestWidth)
 	{
-		spriteWidth -= iDrawX - m_stpSprite[iSpriteIndex].iCenterPointX + spriteWidth - iDestWidth;
+		spriteWidth -= DrawX + spriteWidth - iDestWidth;
 	}
 
-	if(iDrawY - m_stpSprite[iSpriteIndex].iCenterPointY < 0)
+	if(DrawY < 0)
 	{
-		sprite += -(iDrawY - m_stpSprite[iSpriteIndex].iCenterPointY) * m_stpSprite[iSpriteIndex].iWidth * 4;
-		spriteHeight -= -(iDrawY - m_stpSprite[iSpriteIndex].iCenterPointY);
+		sprite -= DrawY * m_stpSprite[iSpriteIndex].iWidth * 4;
+		spriteHeight += DrawY;
 		DrawY = 0;
 	}
 
-	if(iDrawY - m_stpSprite[iSpriteIndex].iCenterPointY + spriteHeight > iDestHeight)
+	if(DrawY + spriteHeight > iDestHeight)
 	{
-		spriteHeight -= iDrawY - m_stpSprite[iSpriteIndex].iCenterPointY + spriteHeight - iDestHeight;
+		spriteHeight -= DrawY + spriteHeight - iDestHeight;
 	}
 
 	if (DrawX > iDestWidth || DrawY > iDestHeight)
 		return;
 
-	bypDest += ((DrawY * iDestPitch) + DrawX * 4);
+	bypDest += (DrawY * iDestPitch) + (DrawX * 4);
 
-	DWORD* pDest = reinterpret_cast<DWORD*>(bypDest);
-	DWORD* pSrc = reinterpret_cast<DWORD*>(sprite);
-	BYTE *pDestOrigin = reinterpret_cast<BYTE*>(pDest);
-	BYTE *pSpriteOrigin = static_cast<BYTE*>(sprite);
+	DWORD* pDest = (DWORD *)bypDest;
+	DWORD* pSrc = (DWORD *)sprite;
+	BYTE *pDestOrigin = (BYTE *)pDest;
+	BYTE *pSpriteOrigin = (BYTE *)sprite;
 
 	for (int y = 0; y < spriteHeight; ++y)
 	{
-		pDest = reinterpret_cast<DWORD*>(pDestOrigin);
-		pSrc = static_cast<DWORD*>(pSrc);
+		pDest = (DWORD *)pDestOrigin;
+		pSrc = (DWORD *)pSpriteOrigin;
 
 		for (int x = 0; x < spriteWidth; ++x)
 		{
-			if ((*reinterpret_cast<DWORD*>(pSrc) & 0x00ffffff) != m_dwColorKey)
-			{
+			if ((*pSrc & 0x00ffffff) != m_dwColorKey)
 				*pDest = *pSrc;
-			}
 
 			pDest++;
 			pSrc++;
@@ -177,51 +175,50 @@ void Sprite::DrawSprite50(int iSpriteIndex, int iDrawX, int iDrawY, BYTE* bypDes
 	int DrawX = iDrawX - m_stpSprite[iSpriteIndex].iCenterPointX;
 	int DrawY = iDrawY - m_stpSprite[iSpriteIndex].iCenterPointY;
 
-	if (iDrawX - m_stpSprite[iSpriteIndex].iCenterPointX < 0)
+	if (DrawX < 0)
 	{
-		sprite += -(iDrawX - m_stpSprite[iSpriteIndex].iCenterPointX) * 4;
-		spriteWidth -= -(iDrawX - m_stpSprite[iSpriteIndex].iCenterPointX);
+		sprite -= DrawX * 4;
+		spriteWidth += DrawX;
 		DrawX = 0;
 	}
 
-	if (iDrawX - m_stpSprite[iSpriteIndex].iCenterPointX + spriteWidth > iDestWidth)
+	if (DrawX + spriteWidth > iDestWidth)
 	{
-		spriteWidth -= iDrawX - m_stpSprite[iSpriteIndex].iCenterPointX + spriteWidth - iDestWidth;
+		spriteWidth -= DrawX + spriteWidth - iDestWidth;
 	}
 
-	if (iDrawY - m_stpSprite[iSpriteIndex].iCenterPointY < 0)
+	if (DrawY < 0)
 	{
-		sprite += -(iDrawY - m_stpSprite[iSpriteIndex].iCenterPointY) * m_stpSprite[iSpriteIndex].iWidth * 4;
-		spriteHeight -= -(iDrawY - m_stpSprite[iSpriteIndex].iCenterPointY);
+		sprite -= DrawY * m_stpSprite[iSpriteIndex].iWidth * 4;
+		spriteHeight += DrawY;
 		DrawY = 0;
 	}
 
-	if (iDrawY - m_stpSprite[iSpriteIndex].iCenterPointY + spriteHeight > iDestHeight)
+	if (DrawY + spriteHeight > iDestHeight)
 	{
-		spriteHeight -= iDrawY - m_stpSprite[iSpriteIndex].iCenterPointY + spriteHeight - iDestHeight;
+		spriteHeight -= DrawY + spriteHeight - iDestHeight;
 	}
+
 
 	if (DrawX > iDestWidth || DrawY > iDestHeight)
 		return;
 
 	bypDest += ((DrawY * iDestPitch) + DrawX * 4);
 
-	DWORD* pDest = reinterpret_cast<DWORD*>(bypDest);
-	DWORD* pSrc = reinterpret_cast<DWORD*>(sprite);
-	BYTE *pDestOrigin = reinterpret_cast<BYTE*>(pDest);
-	BYTE *pSpriteOrigin = static_cast<BYTE*>(sprite);
+	DWORD* pDest = (DWORD *)bypDest;
+	DWORD* pSrc = (DWORD *)sprite;
+	BYTE *pDestOrigin = (BYTE *)pDest;
+	BYTE *pSpriteOrigin = (BYTE *)sprite;
 
 	for (int y = 0; y < spriteHeight; ++y)
 	{
-		pDest = reinterpret_cast<DWORD*>(pDestOrigin);
-		pSrc = static_cast<DWORD*>(pSrc);
+		pDest = (DWORD *)pDestOrigin;
+		pSrc = (DWORD *)pSpriteOrigin;
 
 		for (int x = 0; x < spriteWidth; ++x)
 		{
-			if ((*reinterpret_cast<DWORD*>(pSrc) & 0x00ffffff) != m_dwColorKey)
-			{
-				*pDest = *pSrc & 0x7f7f7f7f + *pDest & 0x7f7f7f7f;
-			}
+			if ((*pSrc & 0x00ffffff) != m_dwColorKey)
+				*pDest = *pSrc;
 
 			pDest++;
 			pSrc++;
@@ -248,22 +245,20 @@ void Sprite::DrawImage(int iSpriteIndex, int iDrawX, int iDrawY, BYTE* bypDest, 
 
 	bypDest += ((iDrawY * iDestPitch) + iDrawX) * 4;
 
-	DWORD* pDest = reinterpret_cast<DWORD*>(bypDest);
-	DWORD* pSrc = reinterpret_cast<DWORD*>(sprite);
-	BYTE *pDestOrigin = reinterpret_cast<BYTE*>(pDest);
-	BYTE *pSpriteOrigin = static_cast<BYTE*>(sprite);
+	DWORD* pDest = (DWORD *)bypDest;
+	DWORD* pSrc = (DWORD *)sprite;
+	BYTE *pDestOrigin = (BYTE *)pDest;
+	BYTE *pSpriteOrigin = (BYTE *)sprite;
 
 	for (int y = 0; y < spriteHeight; ++y)
 	{
-		pDest = reinterpret_cast<DWORD*>(pDestOrigin);
-		pSrc = static_cast<DWORD*>(pSrc);
+		pDest = (DWORD *)pDestOrigin;
+		pSrc = (DWORD *)pSpriteOrigin;
 
 		for (int x = 0; x < spriteWidth; ++x)
 		{
-			if ((*reinterpret_cast<DWORD*>(sprite) & 0x00ffffff) != m_dwColorKey)
-			{
+			if ((*pSrc & 0x00ffffff) != m_dwColorKey)
 				*pDest = *pSrc;
-			}
 
 			pDest++;
 			pSrc++;
