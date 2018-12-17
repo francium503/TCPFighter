@@ -23,9 +23,9 @@ public:
 		bool operator !=(const iterator& rValue);
 		bool operator ==(const iterator& rValue);
 		iterator operator --(int);
+		Node* getNode();
 		
 	protected:
-		Node* getNode();
 		void eraseSelf();
 		
 		friend class CList;

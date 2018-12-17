@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Network.h"
 #include "PlayerObject.h"
 #include "StreamQ.h"
@@ -20,6 +21,10 @@ BOOL PACKET_SC_CREATE_MY_CHARACTER(char * pack)
 	stPACKET_SC_CREATE_MY_CHARACTER *packet = (stPACKET_SC_CREATE_MY_CHARACTER *)pack;
 	
 	g_playerObject = new PlayerObject(TRUE);
+	if(packet->Direction)
+		g_playerObject->SetSprite(ePLAYER_STAND_L01, ePLAYER_STAND_L03, 5);
+	else
+		g_playerObject->SetSprite(ePLAYER_STAND_R01, ePLAYER_STAND_R03, 5);
 	g_playerObject->SetDirection(packet->Direction);
 	g_playerObject->SetCurPosition(packet->X, packet->Y);
 	g_playerObject->SetObjectID(packet->ID);
@@ -34,6 +39,10 @@ BOOL PACKET_SC_CREATE_OTHER_CHARACTER(char * pack)
 
 	PlayerObject *po = new PlayerObject(FALSE);
 
+	if (packet->Direction)
+		po->SetSprite(ePLAYER_STAND_L01, ePLAYER_STAND_L03, 5);
+	else
+		po->SetSprite(ePLAYER_STAND_R01, ePLAYER_STAND_R03, 5);
 	po->SetDirection(packet->Direction);
 	po->SetCurPosition(packet->X, packet->Y);
 	po->SetObjectID(packet->ID);

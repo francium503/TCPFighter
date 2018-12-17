@@ -166,8 +166,31 @@ void PlayerObject::ActionProc()
 		break;
 
 	case dfACTION_ATTACK1:
+		SetActionAttack1();
+		m_dwActionInput = dfACTION_ATTACK1;
+
+		if (IsEndFrame())
+		{
+			SetActionStand();
+			m_dwActionInput = dfACTION_STAND;
+		}
+		break;
+
 	case dfACTION_ATTACK2:
+		SetActionAttack2();
+		m_dwActionInput = dfACTION_ATTACK2;
+
+		if (IsEndFrame())
+		{
+			SetActionStand();
+			m_dwActionInput = dfACTION_STAND;
+		}
+		break;
+
 	case dfACTION_ATTACK3:
+		SetActionAttack3();
+		m_dwActionInput = dfACTION_ATTACK3;
+
 		if(IsEndFrame())
 		{
 			SetActionStand();
@@ -176,6 +199,9 @@ void PlayerObject::ActionProc()
 		break;
 
 	case dfACTION_STAND:
+		if (m_dwActionInput == dfACTION_ATTACK1 || m_dwActionInput == dfACTION_ATTACK2 || m_dwActionInput == dfACTION_ATTACK3)
+			if (!IsEndFrame())
+				break;
 		SetActionStand();
 
 		break;
@@ -210,26 +236,44 @@ void PlayerObject::ActionInput(DWORD dwAction)
 
 void PlayerObject::SetActionAttack1()
 {
-	if(m_iDirCur)
+	if (m_iDirCur) {
+		if (m_iSpriteNow >= ePLAYER_ATTACK1_L01 && m_iSpriteNow <= ePLAYER_ATTACK1_L04)
+			return;
 		SetSprite(ePLAYER_ATTACK1_L01, ePLAYER_ATTACK1_L04, 3);
-	else
+	}
+	else {
+		if (m_iSpriteNow >= ePLAYER_ATTACK1_R01 && m_iSpriteNow <= ePLAYER_ATTACK1_R04)
+			return;
 		SetSprite(ePLAYER_ATTACK1_R01, ePLAYER_ATTACK1_R04, 3);
+	}
 }
 
 void PlayerObject::SetActionAttack2()
 {
-	if (m_iDirCur)
+	if (m_iDirCur) {
+		if (m_iSpriteNow >= ePLAYER_ATTACK2_L01 && m_iSpriteNow <= ePLAYER_ATTACK2_L04)
+			return;
 		SetSprite(ePLAYER_ATTACK2_L01, ePLAYER_ATTACK2_L04, 4);
-	else
+	}
+	else {
+		if (m_iSpriteNow >= ePLAYER_ATTACK2_R01 && m_iSpriteNow <= ePLAYER_ATTACK2_R04)
+			return;
 		SetSprite(ePLAYER_ATTACK2_R01, ePLAYER_ATTACK2_R04, 4);
+	}
 }
 
 void PlayerObject::SetActionAttack3()
 {
-	if (m_iDirCur)
+	if (m_iDirCur) {
+		if (m_iSpriteNow >= ePLAYER_ATTACK3_L01 && m_iSpriteNow <= ePLAYER_ATTACK3_L06)
+			return;
 		SetSprite(ePLAYER_ATTACK3_L01, ePLAYER_ATTACK3_L06, 4);
-	else
+	}
+	else {
+		if (m_iSpriteNow >= ePLAYER_ATTACK3_R01 && m_iSpriteNow <= ePLAYER_ATTACK3_R06)
+			return;
 		SetSprite(ePLAYER_ATTACK3_R01, ePLAYER_ATTACK3_R06, 4);
+	}
 }
 
 void PlayerObject::SetActionMove()
