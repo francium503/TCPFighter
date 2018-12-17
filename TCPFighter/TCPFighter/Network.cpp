@@ -57,6 +57,11 @@ BOOL PACKET_SC_DELETE_CHARACTER(char * pack)
 {
 	stPACKET_SC_DELETE_CHARACTER *packet = (stPACKET_SC_DELETE_CHARACTER *)pack;
 
+	if (packet->ID == g_playerObject->GetObjectID()) {
+		delete[] g_playerObject;
+		return TRUE;
+	}
+
 	for (List<BaseObject *>::iterator iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
 		if ((*iter)->GetObjectID() == packet->ID) {
 			PlayerObject *po = (PlayerObject *)(*iter);
@@ -176,6 +181,12 @@ BOOL PACKET_SC_ATTACK3(char * pack)
 BOOL PACKET_SC_DAMAGE(char * pack)
 {
 	stPACKET_SC_DAMAGE *packet = (stPACKET_SC_DAMAGE *)pack;
+
+	if (packet->DamageID == g_playerObject->GetObjectID()) {
+		g_playerObject->SetHP(packet->DamageHP);
+
+		return TRUE;
+	}
 
 	for (List<BaseObject *>::iterator iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
 		if ((*iter)->GetObjectID() == packet->DamageID) {

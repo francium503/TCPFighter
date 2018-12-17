@@ -22,7 +22,7 @@
 
 #include "stdafx.h"
 
-
+#pragma pack (push, 1)
 //---------------------------------------------------------------
 // 패킷헤더.
 //
@@ -73,6 +73,7 @@ struct st_NETWORK_PACKET_HEADER
 //
 //---------------------------------------------------------------
 
+
 struct stPACKET_SC_CREATE_MY_CHARACTER
 {
 	DWORD	ID;
@@ -98,6 +99,7 @@ struct stPACKET_SC_CREATE_MY_CHARACTER
 //	1	-	HP
 //
 //---------------------------------------------------------------
+
 struct stPACKET_SC_CREATE_OTHER_CHARACTER
 {
 	DWORD ID;
@@ -376,7 +378,7 @@ struct stPACKET_SC_DAMAGE
 	BYTE DamageHP;
 };
 
-
+#pragma pack(pop)
 
 #endif
 

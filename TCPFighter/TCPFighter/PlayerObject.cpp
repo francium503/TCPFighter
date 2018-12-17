@@ -31,9 +31,9 @@ void PlayerObject::ActionProc()
 	switch(m_dwActionCur)
 	{
 	case dfACTION_MOVE_LL:
-		m_iCurX -= 2;
+		m_iCurX -= dfSPEED_PLAYER_X;
 
-		m_iDirCur = TRUE;
+		m_iDirCur = FALSE;
 		SetActionMove();
 
 		if (m_iCurX <= dfRANGE_MOVE_LEFT)
@@ -45,10 +45,10 @@ void PlayerObject::ActionProc()
 		break;
 
 	case dfACTION_MOVE_LU:
-		m_iCurX -= 2;
-		m_iCurY -= 3;
+		m_iCurX -= dfSPEED_PLAYER_X;
+		m_iCurY -= dfSPEED_PLAYER_Y;
 
-		m_iDirCur = TRUE;
+		m_iDirCur = FALSE;
 
 		SetActionMove();
 
@@ -66,7 +66,7 @@ void PlayerObject::ActionProc()
 		}
 		break;
 	case dfACTION_MOVE_UU:
-		m_iCurY -= 3;
+		m_iCurY -= dfSPEED_PLAYER_Y;
 		SetActionMove();
 
 		if (m_iCurY <= dfRANGE_MOVE_TOP)
@@ -78,10 +78,10 @@ void PlayerObject::ActionProc()
 		break;
 
 	case dfACTION_MOVE_RU:
-		m_iCurY -= 3;
-		m_iCurX += 2;
+		m_iCurY -= dfSPEED_PLAYER_Y;
+		m_iCurX += dfSPEED_PLAYER_X;
 
-		m_iDirCur = FALSE;
+		m_iDirCur = TRUE;
 		SetActionMove();
 
 		if (m_iCurX >= dfRANGE_MOVE_RIGHT)
@@ -98,9 +98,9 @@ void PlayerObject::ActionProc()
 		}
 		break;
 	case dfACTION_MOVE_RR:
-		m_iCurX += 2;
+		m_iCurX += dfSPEED_PLAYER_X;
 
-		m_iDirCur = FALSE;
+		m_iDirCur = TRUE;
 		SetActionMove();
 
 		if (m_iCurX >= dfRANGE_MOVE_RIGHT)
@@ -112,10 +112,10 @@ void PlayerObject::ActionProc()
 		break;
 
 	case dfACTION_MOVE_RD:
-		m_iCurY += 3;
-		m_iCurX += 2;
+		m_iCurY += dfSPEED_PLAYER_Y;
+		m_iCurX += dfSPEED_PLAYER_X;
 
-		m_iDirCur = FALSE;
+		m_iDirCur = TRUE;
 		SetActionMove();
 
 		if (m_iCurX <= dfRANGE_MOVE_LEFT)
@@ -132,7 +132,7 @@ void PlayerObject::ActionProc()
 		}
 		break;
 	case dfACTION_MOVE_DD:
-		m_iCurY += 3;
+		m_iCurY += dfSPEED_PLAYER_Y;
 		SetActionMove();
 
 		if (m_iCurY >= dfRANGE_MOVE_BOTTOM)
@@ -145,10 +145,10 @@ void PlayerObject::ActionProc()
 
 
 	case dfACTION_MOVE_LD:
-		m_iCurY += 3;
-		m_iCurX -= 2;
+		m_iCurY += dfSPEED_PLAYER_Y;
+		m_iCurX -= dfSPEED_PLAYER_X;
 
-		m_iDirCur = TRUE;
+		m_iDirCur = FALSE;
 		SetActionMove();
 
 		if (m_iCurX >= dfRANGE_MOVE_RIGHT)
@@ -236,7 +236,7 @@ void PlayerObject::ActionInput(DWORD dwAction)
 
 void PlayerObject::SetActionAttack1()
 {
-	if (m_iDirCur) {
+	if (!m_iDirCur) {
 		if (m_iSpriteNow >= ePLAYER_ATTACK1_L01 && m_iSpriteNow <= ePLAYER_ATTACK1_L04)
 			return;
 		SetSprite(ePLAYER_ATTACK1_L01, ePLAYER_ATTACK1_L04, 3);
@@ -250,7 +250,7 @@ void PlayerObject::SetActionAttack1()
 
 void PlayerObject::SetActionAttack2()
 {
-	if (m_iDirCur) {
+	if (!m_iDirCur) {
 		if (m_iSpriteNow >= ePLAYER_ATTACK2_L01 && m_iSpriteNow <= ePLAYER_ATTACK2_L04)
 			return;
 		SetSprite(ePLAYER_ATTACK2_L01, ePLAYER_ATTACK2_L04, 4);
@@ -264,7 +264,7 @@ void PlayerObject::SetActionAttack2()
 
 void PlayerObject::SetActionAttack3()
 {
-	if (m_iDirCur) {
+	if (!m_iDirCur) {
 		if (m_iSpriteNow >= ePLAYER_ATTACK3_L01 && m_iSpriteNow <= ePLAYER_ATTACK3_L06)
 			return;
 		SetSprite(ePLAYER_ATTACK3_L01, ePLAYER_ATTACK3_L06, 4);
@@ -278,7 +278,7 @@ void PlayerObject::SetActionAttack3()
 
 void PlayerObject::SetActionMove()
 {
-	if (m_iDirCur) {
+	if (!m_iDirCur) {
 		if (m_iSpriteNow >= ePLAYER_MOVE_L01 && m_iSpriteNow <= ePLAYER_MOVE_L12)
 			return;
 		SetSprite(ePLAYER_MOVE_L01, ePLAYER_MOVE_L12, 4);
@@ -292,7 +292,7 @@ void PlayerObject::SetActionMove()
 
 void PlayerObject::SetActionStand()
 {
-	if (m_iDirCur)
+	if (!m_iDirCur)
 	{
 		if (m_iSpriteNow >= ePLAYER_STAND_L01 && m_iSpriteNow <= ePLAYER_STAND_L03)
 			return;
