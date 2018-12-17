@@ -1,7 +1,7 @@
 #pragma once
 
 template <typename T>
-class CList
+class List
 {
 public:
 	struct Node
@@ -32,8 +32,8 @@ public:
 	};
 
 public:
-	CList();
-	~CList();
+	List();
+	~List();
 
 	iterator begin()
 	{
@@ -70,13 +70,13 @@ private:
 
 
 template <typename T>
-CList<T>::iterator::iterator(Node* node)
+List<T>::iterator::iterator(Node* node)
 {
 	_node = node;
 }
 
 template <typename T>
-typename CList<T>::iterator CList<T>::iterator::operator++(int)
+typename List<T>::iterator List<T>::iterator::operator++(int)
 {
 	iterator *tmp = this;
 
@@ -86,20 +86,20 @@ typename CList<T>::iterator CList<T>::iterator::operator++(int)
 }
 
 template <typename T>
-typename CList<T>::iterator CList<T>::iterator::operator++()
+typename List<T>::iterator List<T>::iterator::operator++()
 {
 	_node = _node->_Next;
 	return *this;
 }
 
 template <typename T>
-T& CList<T>::iterator::operator*()
+T& List<T>::iterator::operator*()
 {
 	return _node->_data;
 }
 
 template <typename T>
-bool CList<T>::iterator::operator!=(const iterator& rValue)
+bool List<T>::iterator::operator!=(const iterator& rValue)
 {
 	if (_node == rValue._node)
 		return false;
@@ -107,7 +107,7 @@ bool CList<T>::iterator::operator!=(const iterator& rValue)
 }
 
 template <typename T>
-bool CList<T>::iterator::operator==(const iterator& rValue)
+bool List<T>::iterator::operator==(const iterator& rValue)
 {
 	if (_node != rValue._node)
 		return false;
@@ -115,7 +115,7 @@ bool CList<T>::iterator::operator==(const iterator& rValue)
 }
 
 template <typename T>
-typename CList<T>::iterator CList<T>::iterator::operator--(int)
+typename List<T>::iterator List<T>::iterator::operator--(int)
 {
 	iterator *tmp = this;
 
@@ -126,13 +126,13 @@ typename CList<T>::iterator CList<T>::iterator::operator--(int)
 }
 
 template <typename T>
-typename CList<T>::Node* CList<T>::iterator::getNode()
+typename List<T>::Node* List<T>::iterator::getNode()
 {
 	return this->_node;
 }
 
 template <typename T>
-void CList<T>::iterator::eraseSelf()
+void List<T>::iterator::eraseSelf()
 {
 	if (this->_node->_Prev == nullptr)
 	{
@@ -151,7 +151,7 @@ void CList<T>::iterator::eraseSelf()
 }
 
 template <typename T>
-CList<T>::CList() : _size(0)
+List<T>::List() : _size(0)
 {
 	_head._Prev = nullptr;
 	_head._Next = nullptr;
@@ -160,13 +160,13 @@ CList<T>::CList() : _size(0)
 }
 
 template <typename T>
-CList<T>::~CList()
+List<T>::~List()
 {
 
 }
 
 template <typename T>
-void CList<T>::push_front(T data)
+void List<T>::push_front(T data)
 {
 	if (_size == 0)
 	{
@@ -192,7 +192,7 @@ void CList<T>::push_front(T data)
 }
 
 template <typename T>
-void CList<T>::push_back(T data)
+void List<T>::push_back(T data)
 {
 	if (_size == 0)
 	{
@@ -217,7 +217,7 @@ void CList<T>::push_back(T data)
 }
 
 template <typename T>
-void CList<T>::clear()
+void List<T>::clear()
 {
 	_head._Prev = nullptr;
 	_head._Next = nullptr;
@@ -228,7 +228,7 @@ void CList<T>::clear()
 }
 
 template <typename T>
-typename CList<T>::iterator CList<T>::erase(iterator iter)
+typename List<T>::iterator List<T>::erase(iterator iter)
 {
 	Node* tmp = iter.getNode();
 
