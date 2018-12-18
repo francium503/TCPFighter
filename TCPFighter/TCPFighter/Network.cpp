@@ -202,3 +202,58 @@ BOOL PACKET_SC_DAMAGE(char * pack)
 	return FALSE;
 }
 
+void PACKET_CS_MOVE_START(st_NETWORK_PACKET_HEADER * header, stPACKET_CS_MOVE_START * packet, BYTE direction, WORD x, WORD y)
+{
+	header->byCode = dfNETWORK_PACKET_CODE;
+	header->bySize = sizeof(stPACKET_CS_MOVE_START);
+	header->byType = dfPACKET_CS_MOVE_START;
+
+	packet->Direction = direction;
+	packet->X = x;
+	packet->Y = y;
+}
+
+void PACKET_CS_MOVE_STOP(st_NETWORK_PACKET_HEADER * header, stPACKET_CS_MOVE_STOP * packet, BYTE direction, WORD x, WORD y)
+{
+	header->byCode = dfNETWORK_PACKET_CODE;
+	header->bySize = sizeof(stPACKET_CS_MOVE_STOP);
+	header->byType = dfPACKET_CS_MOVE_STOP;
+
+	packet->Direction = direction;
+	packet->X = x;
+	packet->Y = y;
+}
+
+void PACKET_CS_ATTACK1(st_NETWORK_PACKET_HEADER * header, stPACKET_CS_ATTACK1 * packet, BYTE direction, WORD x, WORD y)
+{
+	header->byCode = dfNETWORK_PACKET_CODE;
+	header->bySize = sizeof(stPACKET_CS_ATTACK1);
+	header->byType = dfPACKET_CS_ATTACK1;
+
+	packet->Direction = direction;
+	packet->X = x;
+	packet->Y = y;
+}
+
+void PACKET_CS_ATTACK2(st_NETWORK_PACKET_HEADER * header, stPACKET_CS_ATTACK2 * packet, BYTE direction, WORD x, WORD y)
+{
+	header->byCode = dfNETWORK_PACKET_CODE;
+	header->bySize = sizeof(stPACKET_CS_ATTACK2);
+	header->byType = dfPACKET_CS_ATTACK2;
+
+	packet->Direction = direction;
+	packet->X = x;
+	packet->Y = y;
+}
+
+void PACKET_CS_ATTACK3(st_NETWORK_PACKET_HEADER * header, stPACKET_CS_ATTACK3 * packet, BYTE direction, WORD x, WORD y)
+{
+	header->byCode = dfNETWORK_PACKET_CODE;
+	header->bySize = sizeof(stPACKET_CS_ATTACK3);
+	header->byType = dfPACKET_CS_ATTACK3;
+
+	packet->Direction = direction;
+	packet->X = x;
+	packet->Y = y;
+}
+
