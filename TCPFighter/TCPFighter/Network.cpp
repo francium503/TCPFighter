@@ -3,8 +3,8 @@
 #include "PlayerObject.h"
 #include "StreamQ.h"
 #include "PacketDefine.h"
-#include "LinkedList.h"
 #include "TCPFighter.h"
+#include "EffectObject.h"
 
 extern HINSTANCE hInst;
 extern HWND g_hWnd;
@@ -14,7 +14,8 @@ extern SOCKET g_socket;
 extern BOOL g_connect;
 extern StreamQ g_recvQ;
 extern StreamQ g_sendQ;
-extern List<BaseObject *> g_playerList;
+extern std::list<PlayerObject *> g_playerList;
+extern std::list<EffectObject *> g_effectList;
 
 BOOL PACKET_SC_CREATE_MY_CHARACTER(char * pack)
 {
@@ -48,7 +49,7 @@ BOOL PACKET_SC_CREATE_OTHER_CHARACTER(char * pack)
 	po->SetObjectID(packet->ID);
 	po->SetHP(packet->HP);
 
-	g_playerList.push_back((BaseObject *)po);
+	g_playerList.push_back(po);
 
 	return TRUE;
 }
@@ -62,9 +63,9 @@ BOOL PACKET_SC_DELETE_CHARACTER(char * pack)
 		return TRUE;
 	}
 
-	for (List<BaseObject *>::iterator iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
+	for (auto iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
 		if ((*iter)->GetObjectID() == packet->ID) {
-			PlayerObject *po = (PlayerObject *)(*iter);
+			PlayerObject *po = (*iter);
 
 			g_playerList.erase(iter);
 
@@ -84,9 +85,9 @@ BOOL PACKET_SC_MOVE_START(char * pack)
 {
 	stPACKET_SC_MOVE_START *packet = (stPACKET_SC_MOVE_START *)pack;
 
-	for (List<BaseObject *>::iterator iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
+	for (auto iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
 		if ((*iter)->GetObjectID() == packet->ID) {
-			PlayerObject *po = (PlayerObject *)(*iter);
+			PlayerObject *po = (*iter);
 
 			po->SetCurPosition(packet->X, packet->Y);
 			po->ActionInput(packet->Direction);
@@ -103,9 +104,9 @@ BOOL PACKET_SC_MOVE_STOP(char * pack)
 {
 	stPACKET_SC_MOVE_STOP *packet = (stPACKET_SC_MOVE_STOP *)pack;
 
-	for (List<BaseObject *>::iterator iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
+	for (auto iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
 		if ((*iter)->GetObjectID() == packet->ID) {
-			PlayerObject *po = (PlayerObject *)(*iter);
+			PlayerObject *po = (*iter);
 
 			po->ActionInput(dfACTION_STAND);
 
@@ -122,9 +123,9 @@ BOOL PACKET_SC_ATTACK1(char * pack)
 {
 	stPACKET_SC_ATTACK1 *packet = (stPACKET_SC_ATTACK1 *)pack;
 
-	for (List<BaseObject *>::iterator iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
+	for (auto iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
 		if ((*iter)->GetObjectID() == packet->ID) {
-			PlayerObject *po = (PlayerObject *)(*iter);
+			PlayerObject *po = (*iter);
 			
 			po->SetDirection(packet->Direction);
 			po->SetCurPosition(packet->X, packet->Y);
@@ -142,9 +143,9 @@ BOOL PACKET_SC_ATTACK2(char * pack)
 {
 	stPACKET_SC_ATTACK2 *packet = (stPACKET_SC_ATTACK2 *)pack;
 
-	for (List<BaseObject *>::iterator iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
+	for (auto iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
 		if ((*iter)->GetObjectID() == packet->ID) {
-			PlayerObject *po = (PlayerObject *)(*iter);
+			PlayerObject *po = (*iter);
 
 			po->SetDirection(packet->Direction);
 			po->SetCurPosition(packet->X, packet->Y);
@@ -162,9 +163,9 @@ BOOL PACKET_SC_ATTACK3(char * pack)
 {
 	stPACKET_SC_ATTACK3 *packet = (stPACKET_SC_ATTACK3 *)pack;
 
-	for (List<BaseObject *>::iterator iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
+	for (auto iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
 		if ((*iter)->GetObjectID() == packet->ID) {
-			PlayerObject *po = (PlayerObject *)(*iter);
+			PlayerObject *po = (*iter);
 
 			po->SetDirection(packet->Direction);
 			po->SetCurPosition(packet->X, packet->Y);
@@ -184,15 +185,25 @@ BOOL PACKET_SC_DAMAGE(char * pack)
 
 	if (packet->DamageID == g_playerObject->GetObjectID()) {
 		g_playerObject->SetHP(packet->DamageHP);
+		
+		EffectObject *effect = new EffectObject();
+		effect->SetCurPosition(g_playerObject->GetCurX(), g_playerObject->GetCurY());
+
+		g_effectList.push_back(effect);
 
 		return TRUE;
 	}
 
-	for (List<BaseObject *>::iterator iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
+	for (auto iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
 		if ((*iter)->GetObjectID() == packet->DamageID) {
-			PlayerObject *po = (PlayerObject *)(*iter);
+			PlayerObject *po = (*iter);
 
 			po->SetHP(packet->DamageHP);
+
+			EffectObject *effect = new EffectObject();
+			effect->SetCurPosition((*iter)->GetCurX(), (*iter)->GetCurY());
+
+			g_effectList.push_back(effect);
 
 			// 무조건 ID가 고유하다는 가정 하에 더이상 검색 안함
 			return TRUE;

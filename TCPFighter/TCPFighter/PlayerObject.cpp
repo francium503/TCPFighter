@@ -2,6 +2,8 @@
 #include "PlayerObject.h"
 #include "TCPFighter.h"
 #include "Sprite.h"
+#include "LinkedList.h"
+#include "EffectObject.h"
 
 extern Sprite g_sprite;
 

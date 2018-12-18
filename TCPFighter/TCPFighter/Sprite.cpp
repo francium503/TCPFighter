@@ -100,7 +100,7 @@ void Sprite::DrawSprite(int iSpriteIndex, int iDrawX, int iDrawY, BYTE* bypDest,
 		return;
 
 	int spriteHeight = m_stpSprite[iSpriteIndex].iHeight;
-	int spriteWidth = m_stpSprite[iSpriteIndex].iWidth;
+	int spriteWidth = m_stpSprite[iSpriteIndex].iWidth * iDrawLen / 100;
 	int spritePitch = m_stpSprite[iSpriteIndex].iPitch;
 	BYTE* sprite = m_stpSprite[iSpriteIndex].bypImage;
 	int DrawX = iDrawX - m_stpSprite[iSpriteIndex].iCenterPointX;

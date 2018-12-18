@@ -104,8 +104,6 @@ bool List<T>::iterator::operator!=(const iterator& rValue)
 {
 	if (_node == rValue._node)
 		return false;
-	if (_node->_Prev == rValue._node->_Prev && _node->_Next == rValue._node->_Next)
-		return false;
 	return true;
 }
 
@@ -113,9 +111,6 @@ template <typename T>
 bool List<T>::iterator::operator==(const iterator& rValue)
 {
 	if (_node != rValue._node)
-		return false;
-
-	if (_node->_Prev != rValue._node->_Prev || _node->_Next != rValue._node->_Next)
 		return false;
 	return true;
 }
