@@ -187,7 +187,7 @@ BOOL PACKET_SC_DAMAGE(char * pack)
 			po->SetHP(packet->DamageHP);
 
 			EffectObject *effect = new EffectObject();
-			effect->SetCurPosition((*iter)->GetCurX(), (*iter)->GetCurY());
+			effect->SetCurPosition((*iter)->GetCurX(), (*iter)->GetCurY() - 70);
 
 			g_effectList.push_back(effect);
 
