@@ -1,11 +1,14 @@
 #include "stdafx.h"
 #include "EffectObject.h"
 #include "Sprite.h"
+#include "TCPFighter.h"
 
 extern Sprite g_sprite;
 
 EffectObject::EffectObject()
 {
+	m_eObjectType = ObjectType::Effect;
+	SetSprite(eEFFECT_SPARK_01, eEFFECT_SPARK_04, 3);
 }
 
 
