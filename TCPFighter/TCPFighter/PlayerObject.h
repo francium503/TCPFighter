@@ -1,10 +1,12 @@
 #pragma once
+
 #include "BaseObject.h"
+
 class PlayerObject :
 	public BaseObject
 {
 public:
-	PlayerObject(BOOL isPlayer);
+	PlayerObject(BOOL isPlayer = FALSE);
 	~PlayerObject();
 
 
@@ -36,6 +38,11 @@ protected:
 	DWORD m_dwActionOld;
 	int m_iDirCur;
 	int m_iDirOld;
-
 };
 
+class PlayerObjectComp {
+public :
+	bool operator() (PlayerObject *lhs, PlayerObject *rhs) {
+		return lhs->GetCurY() < rhs->GetCurY();
+	}
+};

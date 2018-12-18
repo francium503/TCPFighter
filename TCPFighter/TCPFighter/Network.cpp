@@ -31,6 +31,8 @@ BOOL PACKET_SC_CREATE_MY_CHARACTER(char * pack)
 	g_playerObject->SetObjectID(packet->ID);
 	g_playerObject->SetHP(packet->HP);
 
+	g_playerList.push_back(g_playerObject);
+
 	return TRUE;
 }
 
@@ -57,12 +59,7 @@ BOOL PACKET_SC_CREATE_OTHER_CHARACTER(char * pack)
 BOOL PACKET_SC_DELETE_CHARACTER(char * pack)
 {
 	stPACKET_SC_DELETE_CHARACTER *packet = (stPACKET_SC_DELETE_CHARACTER *)pack;
-
-	if (packet->ID == g_playerObject->GetObjectID()) {
-		delete[] g_playerObject;
-		return TRUE;
-	}
-
+	
 	for (auto iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
 		if ((*iter)->GetObjectID() == packet->ID) {
 			PlayerObject *po = (*iter);
@@ -182,18 +179,7 @@ BOOL PACKET_SC_ATTACK3(char * pack)
 BOOL PACKET_SC_DAMAGE(char * pack)
 {
 	stPACKET_SC_DAMAGE *packet = (stPACKET_SC_DAMAGE *)pack;
-
-	if (packet->DamageID == g_playerObject->GetObjectID()) {
-		g_playerObject->SetHP(packet->DamageHP);
-		
-		EffectObject *effect = new EffectObject();
-		effect->SetCurPosition(g_playerObject->GetCurX(), g_playerObject->GetCurY());
-
-		g_effectList.push_back(effect);
-
-		return TRUE;
-	}
-
+	
 	for (auto iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
 		if ((*iter)->GetObjectID() == packet->DamageID) {
 			PlayerObject *po = (*iter);
@@ -204,6 +190,11 @@ BOOL PACKET_SC_DAMAGE(char * pack)
 			effect->SetCurPosition((*iter)->GetCurX(), (*iter)->GetCurY());
 
 			g_effectList.push_back(effect);
+
+			if (po == g_playerObject && packet->DamageHP == 0) {
+				MessageBox(g_hWnd, L"패배", L"패배", MB_OK);
+				PostQuitMessage(0);
+			}
 
 			// 무조건 ID가 고유하다는 가정 하에 더이상 검색 안함
 			return TRUE;
