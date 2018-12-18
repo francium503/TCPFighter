@@ -48,6 +48,9 @@ void BaseObject::NextFrame()
 			m_iSpriteNow = m_iSpriteStart;
 			m_bEndFrame = TRUE;
 		}
+		else {
+			m_bEndFrame = FALSE;
+		}
 	}
 }
 

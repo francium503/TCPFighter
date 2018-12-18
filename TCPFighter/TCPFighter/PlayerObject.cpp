@@ -166,36 +166,21 @@ void PlayerObject::ActionProc()
 		break;
 
 	case dfACTION_ATTACK1:
-		SetActionAttack1();
 		m_dwActionInput = dfACTION_ATTACK1;
+		SetActionAttack1();
 
-		if (IsEndFrame())
-		{
-			SetActionStand();
-			m_dwActionInput = dfACTION_STAND;
-		}
 		break;
 
 	case dfACTION_ATTACK2:
-		SetActionAttack2();
 		m_dwActionInput = dfACTION_ATTACK2;
+		SetActionAttack2();
 
-		if (IsEndFrame())
-		{
-			SetActionStand();
-			m_dwActionInput = dfACTION_STAND;
-		}
 		break;
 
 	case dfACTION_ATTACK3:
-		SetActionAttack3();
 		m_dwActionInput = dfACTION_ATTACK3;
+		SetActionAttack3();
 
-		if(IsEndFrame())
-		{
-			SetActionStand();
-			m_dwActionInput = dfACTION_STAND;
-		}
 		break;
 
 	case dfACTION_STAND:
@@ -236,6 +221,13 @@ void PlayerObject::ActionInput(DWORD dwAction)
 
 void PlayerObject::SetActionAttack1()
 {
+	if (IsEndFrame()) {
+		SetActionStand();
+		m_dwActionCur = dfACTION_STAND;
+		m_dwActionInput = dfACTION_STAND;
+		return;
+	}
+
 	if (!m_iDirCur) {
 		if (m_iSpriteNow >= ePLAYER_ATTACK1_L01 && m_iSpriteNow <= ePLAYER_ATTACK1_L04)
 			return;
@@ -250,6 +242,13 @@ void PlayerObject::SetActionAttack1()
 
 void PlayerObject::SetActionAttack2()
 {
+	if (IsEndFrame()) {
+		SetActionStand();
+		m_dwActionCur = dfACTION_STAND;
+		m_dwActionInput = dfACTION_STAND;
+		return;
+	}
+
 	if (!m_iDirCur) {
 		if (m_iSpriteNow >= ePLAYER_ATTACK2_L01 && m_iSpriteNow <= ePLAYER_ATTACK2_L04)
 			return;
@@ -264,6 +263,13 @@ void PlayerObject::SetActionAttack2()
 
 void PlayerObject::SetActionAttack3()
 {
+	if (IsEndFrame()) {
+		SetActionStand();
+		m_dwActionCur = dfACTION_STAND;
+		m_dwActionInput = dfACTION_STAND;
+		return;
+	}
+
 	if (!m_iDirCur) {
 		if (m_iSpriteNow >= ePLAYER_ATTACK3_L01 && m_iSpriteNow <= ePLAYER_ATTACK3_L06)
 			return;
