@@ -23,5 +23,5 @@ void EffectObject::Action()
 
 void EffectObject::Draw(BYTE* bypDest, int iDestWidth, int iDestHeight, int iDestPitch)
 {
-	g_sprite.DrawSprite(GetSprite(), m_iCurX, m_iCurY, bypDest, iDestWidth, iDestHeight, iDestPitch);
+	g_sprite.DrawSprite(GetSprite(), m_iCurX, m_iCurY + 60, bypDest, iDestWidth, iDestHeight, iDestPitch);
 }
