@@ -3,6 +3,9 @@
 
 class StreamQ {
 public:
+	enum eBuffer {
+		eBuffer_DEFAULT = 1000
+	};
 	StreamQ(void);
 	StreamQ(int iBufferSize);
 
