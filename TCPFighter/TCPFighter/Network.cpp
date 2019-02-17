@@ -66,7 +66,6 @@ BOOL PACKET_SC_DELETE_CHARACTER(char * pack)
 
 			g_playerList.erase(iter);
 
-			// List에서 erase 할때 제거 하지 않음으로 따로 delete 함 추후 List 수정 필요
 			delete po;
 
 			// 무조건 ID가 고유하다는 가정 하에 더이상 검색 안함
@@ -202,6 +201,22 @@ BOOL PACKET_SC_DAMAGE(char * pack)
 	}
 
 	return FALSE;
+}
+
+BOOL PACKET_SC_SYNC(char * pack)
+{
+	stPACKET_SC_SYNC *packet = (stPACKET_SC_SYNC *)pack;
+
+	for (auto iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
+		if ((*iter)->GetObjectID() == packet->SyncID) {
+			(*iter)->SetCurPosition(packet->X, packet->Y);
+
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+
 }
 
 void PACKET_CS_MOVE_START(st_NETWORK_PACKET_HEADER * header, stPACKET_CS_MOVE_START * packet, BYTE direction, WORD x, WORD y)

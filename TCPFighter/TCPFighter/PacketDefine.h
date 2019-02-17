@@ -378,6 +378,26 @@ struct stPACKET_SC_DAMAGE
 	BYTE DamageHP;
 };
 
+
+#define dfPaCKET_SC_SYNC						251
+//---------------------------------------------------------------
+// 동기화를 위한 패킷					Server -> Client
+//
+// 서버로부터 동기화 패킷을 받으면 해당 캐릭터를 찾아서
+// 캐릭터 좌표를 보정해준다.
+//
+//	4	-	ID
+//	2	-	X
+//	2	-	Y
+//
+//---------------------------------------------------------------
+struct stPACKET_SC_SYNC
+{
+	DWORD SyncID;
+	WORD X;
+	WORD Y;
+};
+
 #pragma pack(pop)
 
 #endif

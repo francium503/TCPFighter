@@ -14,6 +14,7 @@ BOOL PACKET_SC_ATTACK1(char * pack);
 BOOL PACKET_SC_ATTACK2(char * pack);
 BOOL PACKET_SC_ATTACK3(char * pack);
 BOOL PACKET_SC_DAMAGE(char * pack);
+BOOL PACKET_SC_SYNC(char * pack);
 
 
 void PACKET_CS_MOVE_START(st_NETWORK_PACKET_HEADER *header, stPACKET_CS_MOVE_START *packet, BYTE direction, WORD x, WORD y);
