@@ -3,8 +3,11 @@
 #include "TCPFighter.h"
 #include "Sprite.h"
 #include "EffectObject.h"
+#include "TileMap.h"
+#include "Network.h"
 
 extern Sprite g_sprite;
+extern TileMap g_tileMap;
 
 PlayerObject::PlayerObject(BOOL isPlayer) : m_bPlayerCharacter(isPlayer)
 {
@@ -29,169 +32,15 @@ void PlayerObject::Action()
 
 void PlayerObject::ActionProc()
 {
-	switch(m_dwActionCur)
-	{
-	case dfACTION_MOVE_LL:
-		m_iCurX -= dfSPEED_PLAYER_X;
-
-		m_iDirCur = FALSE;
-		SetActionMove();
-
-		if (m_iCurX <= dfRANGE_MOVE_LEFT)
-		{
-			SetActionStand();
-			m_dwActionInput = dfACTION_STAND;
-			m_iCurX = dfRANGE_MOVE_LEFT;
-		}
-		break;
-
-	case dfACTION_MOVE_LU:
-		m_iCurX -= dfSPEED_PLAYER_X;
-		m_iCurY -= dfSPEED_PLAYER_Y;
-
-		m_iDirCur = FALSE;
-
-		SetActionMove();
-
-		if (m_iCurX <= dfRANGE_MOVE_LEFT)
-		{
-			SetActionStand();
-			m_dwActionInput = dfACTION_STAND;
-			m_iCurX = dfRANGE_MOVE_LEFT;
-		}
-		if (m_iCurY <= dfRANGE_MOVE_TOP)
-		{
-			SetActionStand();
-			m_dwActionInput = dfACTION_STAND;
-			m_iCurY = dfRANGE_MOVE_TOP;
-		}
-		break;
-	case dfACTION_MOVE_UU:
-		m_iCurY -= dfSPEED_PLAYER_Y;
-		SetActionMove();
-
-		if (m_iCurY <= dfRANGE_MOVE_TOP)
-		{
-			SetActionStand();
-			m_dwActionInput = dfACTION_STAND;
-			m_iCurY = dfRANGE_MOVE_TOP;
-		}
-		break;
-
-	case dfACTION_MOVE_RU:
-		m_iCurY -= dfSPEED_PLAYER_Y;
-		m_iCurX += dfSPEED_PLAYER_X;
-
-		m_iDirCur = TRUE;
-		SetActionMove();
-
-		if (m_iCurX >= dfRANGE_MOVE_RIGHT)
-		{
-			SetActionStand();
-			m_dwActionInput = dfACTION_STAND;
-			m_iCurX = dfRANGE_MOVE_RIGHT;
-		}
-		if (m_iCurY <= dfRANGE_MOVE_TOP)
-		{
-			SetActionStand();
-			m_dwActionInput = dfACTION_STAND;
-			m_iCurY = dfRANGE_MOVE_TOP;
-		}
-		break;
-	case dfACTION_MOVE_RR:
-		m_iCurX += dfSPEED_PLAYER_X;
-
-		m_iDirCur = TRUE;
-		SetActionMove();
-
-		if (m_iCurX >= dfRANGE_MOVE_RIGHT)
-		{
-			SetActionStand();
-			m_dwActionInput = dfACTION_STAND;
-			m_iCurX = dfRANGE_MOVE_RIGHT;
-		}
-		break;
-
-	case dfACTION_MOVE_RD:
-		m_iCurY += dfSPEED_PLAYER_Y;
-		m_iCurX += dfSPEED_PLAYER_X;
-
-		m_iDirCur = TRUE;
-		SetActionMove();
-
-		if (m_iCurX <= dfRANGE_MOVE_LEFT)
-		{
-			SetActionStand();
-			m_dwActionInput = dfACTION_STAND;
-			m_iCurX = dfRANGE_MOVE_LEFT;
-		}
-		if (m_iCurY >= dfRANGE_MOVE_BOTTOM)
-		{
-			SetActionStand();
-			m_dwActionInput = dfACTION_STAND;
-			m_iCurY = dfRANGE_MOVE_BOTTOM;
-		}
-		break;
-	case dfACTION_MOVE_DD:
-		m_iCurY += dfSPEED_PLAYER_Y;
-		SetActionMove();
-
-		if (m_iCurY >= dfRANGE_MOVE_BOTTOM)
-		{
-			SetActionStand();
-			m_dwActionInput = dfACTION_STAND;
-			m_iCurY = dfRANGE_MOVE_BOTTOM;
-		}
-		break;
-
-
-	case dfACTION_MOVE_LD:
-		m_iCurY += dfSPEED_PLAYER_Y;
-		m_iCurX -= dfSPEED_PLAYER_X;
-
-		m_iDirCur = FALSE;
-		SetActionMove();
-
-		if (m_iCurX >= dfRANGE_MOVE_RIGHT)
-		{
-			SetActionStand();
-			m_dwActionInput = dfACTION_STAND;
-			m_iCurX = dfRANGE_MOVE_RIGHT;
-		}
-		if (m_iCurY >= dfRANGE_MOVE_BOTTOM)
-		{
-			SetActionStand();
-			m_dwActionInput = dfACTION_STAND;
-			m_iCurY = dfRANGE_MOVE_BOTTOM;
-		}
-		break;
-
+	switch (m_dwActionCur) {
 	case dfACTION_ATTACK1:
-		m_dwActionInput = dfACTION_ATTACK1;
-		SetActionAttack1();
-
-		break;
-
 	case dfACTION_ATTACK2:
-		m_dwActionInput = dfACTION_ATTACK2;
-		SetActionAttack2();
-
-		break;
-
 	case dfACTION_ATTACK3:
-		m_dwActionInput = dfACTION_ATTACK3;
-		SetActionAttack3();
-
+		if (IsEndFrame()) {
+			SetActionStand();
+			m_dwActionInput = dfACTION_STAND;
+		}
 		break;
-
-	case dfACTION_STAND:
-		if (m_dwActionInput == dfACTION_ATTACK1 || m_dwActionInput == dfACTION_ATTACK2 || m_dwActionInput == dfACTION_ATTACK3)
-			if (!IsEndFrame())
-				break;
-		SetActionStand();
-
-		break;
-
 	default:
 		InputActionProc();
 		break;
@@ -200,9 +49,12 @@ void PlayerObject::ActionProc()
 
 void PlayerObject::Draw(BYTE* bypDest, int iDestWidth, int iDestHeight, int iDestPitch)
 {
-	g_sprite.DrawSprite50(eSHADOW, m_iCurX, m_iCurY, bypDest, iDestWidth, iDestHeight, iDestPitch);
-	g_sprite.DrawSprite(GetSprite(), m_iCurX, m_iCurY, bypDest, iDestWidth, iDestHeight, iDestPitch);
-	g_sprite.DrawSprite(eGUAGE_HP, m_iCurX - 35, m_iCurY + 9, bypDest, iDestWidth, iDestHeight, iDestPitch, m_chHP);
+	int cameraX = m_iCurX - g_tileMap.GetDrawX();
+	int cameraY = m_iCurY - g_tileMap.GetDrawY() + 50;
+
+	g_sprite.DrawSprite50(eSHADOW, cameraX, cameraY, bypDest, iDestWidth, iDestHeight, iDestPitch);
+	g_sprite.DrawSprite(GetSprite(), cameraX, cameraY, bypDest, iDestWidth, iDestHeight, iDestPitch);
+	g_sprite.DrawSprite(eGUAGE_HP, cameraX - 35, cameraY + 9, bypDest, iDestWidth, iDestHeight, iDestPitch, m_chHP);
 }
 
 void PlayerObject::SetDirection(int direction)
@@ -217,15 +69,13 @@ void PlayerObject::SetHP(char hp)
 
 void PlayerObject::ActionInput(DWORD dwAction)
 {
-	m_dwActionCur = dwAction;
+	m_dwActionInput = dwAction;
 }
 
 void PlayerObject::SetActionAttack1()
 {
 	if (IsEndFrame()) {
 		SetActionStand();
-		m_dwActionCur = dfACTION_STAND;
-		m_dwActionInput = dfACTION_STAND;
 		return;
 	}
 
@@ -245,8 +95,6 @@ void PlayerObject::SetActionAttack2()
 {
 	if (IsEndFrame()) {
 		SetActionStand();
-		m_dwActionCur = dfACTION_STAND;
-		m_dwActionInput = dfACTION_STAND;
 		return;
 	}
 
@@ -266,8 +114,6 @@ void PlayerObject::SetActionAttack3()
 {
 	if (IsEndFrame()) {
 		SetActionStand();
-		m_dwActionCur = dfACTION_STAND;
-		m_dwActionInput = dfACTION_STAND;
 		return;
 	}
 
@@ -299,6 +145,10 @@ void PlayerObject::SetActionMove()
 
 void PlayerObject::SetActionStand()
 {
+	m_dwActionOld = m_dwActionCur;
+	m_dwActionCur = dfACTION_STAND;
+	m_dwActionInput = dfACTION_STAND;
+
 	if (!m_iDirCur)
 	{
 		if (m_iSpriteNow >= ePLAYER_STAND_L01 && m_iSpriteNow <= ePLAYER_STAND_L03)
@@ -314,5 +164,290 @@ void PlayerObject::SetActionStand()
 
 void PlayerObject::InputActionProc()
 {
+	switch(m_dwActionInput) {
+	case dfACTION_MOVE_LU: {
+		m_iCurX -= dfSPEED_PLAYER_X;
+		m_iCurY -= dfSPEED_PLAYER_Y;
 
+		m_iDirCur = FALSE;
+
+		SetActionMove();
+
+		if (m_iCurX <= dfRANGE_MOVE_LEFT)
+		{
+			SetActionStand();
+			m_iCurX = dfRANGE_MOVE_LEFT;
+			break;
+		}
+		if (m_iCurY <= dfRANGE_MOVE_TOP)
+		{
+			SetActionStand();
+			m_iCurY = dfRANGE_MOVE_TOP;
+			break;
+		}
+		if (m_dwActionCur != dfACTION_MOVE_LU) {
+			m_dwActionCur = dfACTION_MOVE_LU;
+			st_NETWORK_PACKET_HEADER header;
+			stPACKET_CS_MOVE_START packet;
+			PACKET_CS_MOVE_START(&header, &packet, dfACTION_MOVE_LU, GetCurX(), GetCurY());
+			SendPacket(&header, (char *)&packet);
+		}
+	}
+		break;
+
+	case dfACTION_MOVE_LD: {
+		m_iCurY += dfSPEED_PLAYER_Y;
+		m_iCurX -= dfSPEED_PLAYER_X;
+
+		m_iDirCur = FALSE;
+		SetActionMove();
+
+		if (m_iCurX >= dfRANGE_MOVE_RIGHT)
+		{
+			SetActionStand();
+			m_iCurX = dfRANGE_MOVE_RIGHT;
+			break;
+		}
+		if (m_iCurY >= dfRANGE_MOVE_BOTTOM)
+		{
+			SetActionStand();
+			m_iCurY = dfRANGE_MOVE_BOTTOM;
+			break;
+		}
+		if (m_dwActionCur != dfACTION_MOVE_LD) {
+			m_dwActionCur = dfACTION_MOVE_LD;
+			st_NETWORK_PACKET_HEADER header;
+			stPACKET_CS_MOVE_START packet;
+			PACKET_CS_MOVE_START(&header, &packet, dfACTION_MOVE_LD, GetCurX(), GetCurY());
+			SendPacket(&header, (char *)&packet);
+		}
+	}
+		break;
+
+	case dfACTION_MOVE_LL: {
+		m_iCurX -= dfSPEED_PLAYER_X;
+
+		m_iDirCur = FALSE;
+		SetActionMove();
+
+		if (m_iCurX <= dfRANGE_MOVE_LEFT)
+		{
+			SetActionStand();
+			m_iCurX = dfRANGE_MOVE_LEFT;
+			break;
+		}
+		if (m_dwActionCur != dfACTION_MOVE_LL) {
+
+			m_dwActionCur = dfACTION_MOVE_LL;
+			st_NETWORK_PACKET_HEADER header;
+			stPACKET_CS_MOVE_START packet;
+			PACKET_CS_MOVE_START(&header, &packet, dfACTION_MOVE_LL, GetCurX(), GetCurY());
+			SendPacket(&header, (char *)&packet);
+		}
+	}
+		break;
+
+	case dfACTION_MOVE_RU: {
+		m_iCurY -= dfSPEED_PLAYER_Y;
+		m_iCurX += dfSPEED_PLAYER_X;
+
+		m_iDirCur = TRUE;
+		SetActionMove();
+
+		if (m_iCurX >= dfRANGE_MOVE_RIGHT)
+		{
+			SetActionStand();
+			m_iCurX = dfRANGE_MOVE_RIGHT;
+			break;
+		}
+		if (m_iCurY <= dfRANGE_MOVE_TOP)
+		{
+			SetActionStand();
+			m_iCurY = dfRANGE_MOVE_TOP;
+			break;
+		}
+		if (m_dwActionCur != dfACTION_MOVE_RU) {
+			m_dwActionCur = dfACTION_MOVE_RU;
+			st_NETWORK_PACKET_HEADER header;
+			stPACKET_CS_MOVE_START packet;
+			PACKET_CS_MOVE_START(&header, &packet, dfACTION_MOVE_RU, GetCurX(), GetCurY());
+			SendPacket(&header, (char *)&packet);
+		}
+	}
+		break;
+
+	case dfACTION_MOVE_RD: {
+		m_iCurY += dfSPEED_PLAYER_Y;
+		m_iCurX += dfSPEED_PLAYER_X;
+
+		m_iDirCur = TRUE;
+		SetActionMove();
+
+		if (m_iCurX <= dfRANGE_MOVE_LEFT)
+		{
+			SetActionStand();
+			m_iCurX = dfRANGE_MOVE_LEFT;
+			break;
+		}
+		if (m_iCurY >= dfRANGE_MOVE_BOTTOM)
+		{
+			SetActionStand();
+			m_iCurY = dfRANGE_MOVE_BOTTOM;
+			break;
+		}
+
+		if (m_dwActionCur != dfACTION_MOVE_RD) {
+			m_dwActionCur = dfACTION_MOVE_RD;
+			st_NETWORK_PACKET_HEADER header;
+			stPACKET_CS_MOVE_START packet;
+			PACKET_CS_MOVE_START(&header, &packet, dfACTION_MOVE_RD, GetCurX(), GetCurY());
+			SendPacket(&header, (char *)&packet);
+		}
+
+	}
+		break;
+
+	case dfACTION_MOVE_RR: {
+		m_iCurX += dfSPEED_PLAYER_X;
+
+		m_iDirCur = TRUE;
+		SetActionMove();
+
+		if (m_iCurX >= dfRANGE_MOVE_RIGHT)
+		{
+			SetActionStand();
+			m_iCurX = dfRANGE_MOVE_RIGHT;
+			break;
+		}
+		if (m_dwActionCur != dfACTION_MOVE_RR) {
+			m_dwActionCur = dfACTION_MOVE_RR;
+			st_NETWORK_PACKET_HEADER header;
+			stPACKET_CS_MOVE_START packet;
+			PACKET_CS_MOVE_START(&header, &packet, dfACTION_MOVE_RR, GetCurX(), GetCurY());
+			SendPacket(&header, (char *)&packet);
+		}
+	}
+		break;
+
+	case dfACTION_MOVE_UU: {
+		m_iCurY -= dfSPEED_PLAYER_Y;
+		SetActionMove();
+
+		if (m_iCurY <= dfRANGE_MOVE_TOP)
+		{
+			SetActionStand();
+			m_iCurY = dfRANGE_MOVE_TOP;
+			break;
+		}
+		if (m_dwActionCur != dfACTION_MOVE_UU) {
+			m_dwActionCur = dfACTION_MOVE_UU;
+			st_NETWORK_PACKET_HEADER header;
+			stPACKET_CS_MOVE_START packet;
+			PACKET_CS_MOVE_START(&header, &packet, dfACTION_MOVE_UU, GetCurX(), GetCurY());
+			SendPacket(&header, (char *)&packet);
+		}
+	}
+		break;
+
+	case dfACTION_MOVE_DD: {
+		m_iCurY += dfSPEED_PLAYER_Y;
+		SetActionMove();
+
+		if (m_iCurY >= dfRANGE_MOVE_BOTTOM)
+		{
+			SetActionStand();
+			m_iCurY = dfRANGE_MOVE_BOTTOM;
+			break;
+		}
+		if (m_dwActionCur != dfACTION_MOVE_DD) {
+			m_dwActionCur = dfACTION_MOVE_DD;
+			st_NETWORK_PACKET_HEADER header;
+			stPACKET_CS_MOVE_START packet;
+			PACKET_CS_MOVE_START(&header, &packet, dfACTION_MOVE_DD, GetCurX(), GetCurY());
+			SendPacket(&header, (char *)&packet);
+		}
+	}
+		break;
+
+	case dfACTION_ATTACK1: {
+		SetActionAttack1();
+		if (m_dwActionCur != dfACTION_ATTACK1) {
+			m_dwActionCur = dfACTION_ATTACK1;
+			st_NETWORK_PACKET_HEADER header;
+			stPACKET_CS_MOVE_STOP packet;
+			stPACKET_CS_ATTACK1 attackPacket;
+			if (GetDirection())
+				PACKET_CS_MOVE_STOP(&header, &packet, dfACTION_MOVE_RR, GetCurX(), GetCurY());
+			else
+				PACKET_CS_MOVE_STOP(&header, &packet, dfACTION_MOVE_LL, GetCurX(), GetCurY());
+			SendPacket(&header, (char *)&packet);
+
+			if (GetDirection())
+				PACKET_CS_ATTACK1(&header, &attackPacket, dfACTION_MOVE_RR, GetCurX(), GetCurY());
+			else
+				PACKET_CS_ATTACK1(&header, &attackPacket, dfACTION_MOVE_LL, GetCurX(), GetCurY());
+			SendPacket(&header, (char *)&attackPacket);
+		}
+	}
+		break;
+	case dfACTION_ATTACK2: {
+		SetActionAttack2();
+		if (m_dwActionCur != dfACTION_ATTACK2) {
+			m_dwActionCur = dfACTION_ATTACK2;
+			st_NETWORK_PACKET_HEADER header;
+			stPACKET_CS_MOVE_STOP packet;
+			stPACKET_CS_ATTACK2 attackPacket;
+			if (GetDirection())
+				PACKET_CS_MOVE_STOP(&header, &packet, dfACTION_MOVE_RR, GetCurX(), GetCurY());
+			else
+				PACKET_CS_MOVE_STOP(&header, &packet, dfACTION_MOVE_LL, GetCurX(), GetCurY());
+			SendPacket(&header, (char *)&packet);
+
+			if (GetDirection())
+				PACKET_CS_ATTACK2(&header, &attackPacket, dfACTION_MOVE_RR, GetCurX(), GetCurY());
+			else
+				PACKET_CS_ATTACK2(&header, &attackPacket, dfACTION_MOVE_LL, GetCurX(), GetCurY());
+			SendPacket(&header, (char *)&attackPacket);
+		}
+	}
+		break;
+	case dfACTION_ATTACK3: {
+		SetActionAttack3();
+
+		if (m_dwActionCur != dfACTION_ATTACK3) {
+			m_dwActionCur = dfACTION_ATTACK3;
+			st_NETWORK_PACKET_HEADER header;
+			stPACKET_CS_MOVE_STOP packet;
+			stPACKET_CS_ATTACK3 attackPacket;
+			if (GetDirection())
+				PACKET_CS_MOVE_STOP(&header, &packet, dfACTION_MOVE_RR, GetCurX(), GetCurY());
+			else
+				PACKET_CS_MOVE_STOP(&header, &packet, dfACTION_MOVE_LL, GetCurX(), GetCurY());
+			SendPacket(&header, (char *)&packet);
+
+			if (GetDirection())
+				PACKET_CS_ATTACK3(&header, &attackPacket, dfACTION_MOVE_RR, GetCurX(), GetCurY());
+			else
+				PACKET_CS_ATTACK3(&header, &attackPacket, dfACTION_MOVE_LL, GetCurX(), GetCurY());
+			SendPacket(&header, (char *)&attackPacket);
+		}
+	}
+		break;
+	case dfACTION_STAND: {
+		if (m_dwActionCur != dfACTION_STAND) {
+			SetActionStand();
+			st_NETWORK_PACKET_HEADER header;
+			stPACKET_CS_MOVE_STOP packet;
+			if (GetDirection())
+				PACKET_CS_MOVE_STOP(&header, &packet, dfACTION_MOVE_RR, GetCurX(), GetCurY());
+			else
+				PACKET_CS_MOVE_STOP(&header, &packet, dfACTION_MOVE_LL, GetCurX(), GetCurY());
+			SendPacket(&header, (char *)&packet);
+		}
+	}
+		break;
+
+	default:
+		break;
+	}
 }

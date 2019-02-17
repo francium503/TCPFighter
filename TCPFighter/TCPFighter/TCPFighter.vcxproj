@@ -162,6 +162,7 @@
     <ClInclude Include="StreamQ.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TCPFighter.h" />
+    <ClInclude Include="TileMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseObject.cpp" />
@@ -178,6 +179,7 @@
     </ClCompile>
     <ClCompile Include="StreamQ.cpp" />
     <ClCompile Include="TCPFighter.cpp" />
+    <ClCompile Include="TileMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TCPFighter.rc" />
