@@ -33,7 +33,7 @@ public:
 	// Peek 하고 성공한 바이트 수 리턴
 	int Peek(char* chpDest, int iSize);
 
-	void MoveRear(int iSize);
+	int MoveRear(int iSize);
 	int MoveFront(int iSize);
 
 	// 멤버변수 이동으로 버퍼 초기화

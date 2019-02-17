@@ -50,6 +50,7 @@ BOOL PACKET_SC_CREATE_OTHER_CHARACTER(char * pack)
 	po->SetCurPosition(packet->X, packet->Y);
 	po->SetObjectID(packet->ID);
 	po->SetHP(packet->HP);
+	po->ActionInput(dfACTION_STAND);
 
 	g_playerList.push_back(po);
 
@@ -83,10 +84,8 @@ BOOL PACKET_SC_MOVE_START(char * pack)
 
 	for (auto iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
 		if ((*iter)->GetObjectID() == packet->ID) {
-			PlayerObject *po = (*iter);
-
-			po->SetCurPosition(packet->X, packet->Y);
-			po->ActionInput(packet->Direction);
+			(*iter)->SetCurPosition(packet->X, packet->Y);
+			(*iter)->ActionInput(packet->Direction);
 
 			// 무조건 ID가 고유하다는 가정 하에 더이상 검색 안함
 			return TRUE;
@@ -102,9 +101,7 @@ BOOL PACKET_SC_MOVE_STOP(char * pack)
 
 	for (auto iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
 		if ((*iter)->GetObjectID() == packet->ID) {
-			PlayerObject *po = (*iter);
-
-			po->ActionInput(dfACTION_STAND);
+			(*iter)->ActionInput(dfACTION_STAND);
 
 			// 무조건 ID가 고유하다는 가정 하에 더이상 검색 안함
 			return TRUE;
@@ -121,11 +118,9 @@ BOOL PACKET_SC_ATTACK1(char * pack)
 
 	for (auto iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
 		if ((*iter)->GetObjectID() == packet->ID) {
-			PlayerObject *po = (*iter);
-			
-			po->SetDirection(packet->Direction);
-			po->SetCurPosition(packet->X, packet->Y);
-			po->ActionInput(dfACTION_ATTACK1);
+			(*iter)->SetDirection(packet->Direction);
+			(*iter)->SetCurPosition(packet->X, packet->Y);
+			(*iter)->ActionInput(dfACTION_ATTACK1);
 
 			// 무조건 ID가 고유하다는 가정 하에 더이상 검색 안함
 			return TRUE;
@@ -141,11 +136,9 @@ BOOL PACKET_SC_ATTACK2(char * pack)
 
 	for (auto iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
 		if ((*iter)->GetObjectID() == packet->ID) {
-			PlayerObject *po = (*iter);
-
-			po->SetDirection(packet->Direction);
-			po->SetCurPosition(packet->X, packet->Y);
-			po->ActionInput(dfACTION_ATTACK2);
+			(*iter)->SetDirection(packet->Direction);
+			(*iter)->SetCurPosition(packet->X, packet->Y);
+			(*iter)->ActionInput(dfACTION_ATTACK2);
 
 			// 무조건 ID가 고유하다는 가정 하에 더이상 검색 안함
 			return TRUE;
@@ -161,11 +154,9 @@ BOOL PACKET_SC_ATTACK3(char * pack)
 
 	for (auto iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
 		if ((*iter)->GetObjectID() == packet->ID) {
-			PlayerObject *po = (*iter);
-
-			po->SetDirection(packet->Direction);
-			po->SetCurPosition(packet->X, packet->Y);
-			po->ActionInput(dfACTION_ATTACK3);
+			(*iter)->SetDirection(packet->Direction);
+			(*iter)->SetCurPosition(packet->X, packet->Y);
+			(*iter)->ActionInput(dfACTION_ATTACK3);
 
 			// 무조건 ID가 고유하다는 가정 하에 더이상 검색 안함
 			return TRUE;
@@ -181,16 +172,14 @@ BOOL PACKET_SC_DAMAGE(char * pack)
 	
 	for (auto iter = g_playerList.begin(); iter != g_playerList.end(); ++iter) {
 		if ((*iter)->GetObjectID() == packet->DamageID) {
-			PlayerObject *po = (*iter);
-
-			po->SetHP(packet->DamageHP);
+			(*iter)->SetHP(packet->DamageHP);
 
 			EffectObject *effect = new EffectObject();
 			effect->SetCurPosition((*iter)->GetCurX(), (*iter)->GetCurY() - 70);
 
 			g_effectList.push_back(effect);
 
-			if (po == g_playerObject && packet->DamageHP == 0) {
+			if ((*iter) == g_playerObject && packet->DamageHP == 0) {
 				MessageBox(g_hWnd, L"패배", L"패배", MB_OK);
 				PostQuitMessage(0);
 			}
