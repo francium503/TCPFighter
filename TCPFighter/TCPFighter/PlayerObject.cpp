@@ -8,6 +8,7 @@
 
 extern Sprite g_sprite;
 extern TileMap g_tileMap;
+extern PlayerObject* g_playerObject;
 
 PlayerObject::PlayerObject(BOOL isPlayer) : m_bPlayerCharacter(isPlayer)
 {
@@ -50,7 +51,7 @@ void PlayerObject::ActionProc()
 void PlayerObject::Draw(BYTE* bypDest, int iDestWidth, int iDestHeight, int iDestPitch)
 {
 	int cameraX = m_iCurX - g_tileMap.GetDrawX();
-	int cameraY = m_iCurY - g_tileMap.GetDrawY() + 50;
+	int cameraY = m_iCurY - g_tileMap.GetDrawY();
 
 	g_sprite.DrawSprite50(eSHADOW, cameraX, cameraY, bypDest, iDestWidth, iDestHeight, iDestPitch);
 	g_sprite.DrawSprite(GetSprite(), cameraX, cameraY, bypDest, iDestWidth, iDestHeight, iDestPitch);
@@ -185,7 +186,7 @@ void PlayerObject::InputActionProc()
 			m_iCurY = dfRANGE_MOVE_TOP;
 			break;
 		}
-		if (m_dwActionCur != dfACTION_MOVE_LU) {
+		if (m_dwActionCur != dfACTION_MOVE_LU && g_playerObject == this) {
 			m_dwActionCur = dfACTION_MOVE_LU;
 			st_NETWORK_PACKET_HEADER header;
 			stPACKET_CS_MOVE_START packet;
@@ -214,7 +215,7 @@ void PlayerObject::InputActionProc()
 			m_iCurY = dfRANGE_MOVE_BOTTOM;
 			break;
 		}
-		if (m_dwActionCur != dfACTION_MOVE_LD) {
+		if (m_dwActionCur != dfACTION_MOVE_LD && g_playerObject == this) {
 			m_dwActionCur = dfACTION_MOVE_LD;
 			st_NETWORK_PACKET_HEADER header;
 			stPACKET_CS_MOVE_START packet;
@@ -236,7 +237,7 @@ void PlayerObject::InputActionProc()
 			m_iCurX = dfRANGE_MOVE_LEFT;
 			break;
 		}
-		if (m_dwActionCur != dfACTION_MOVE_LL) {
+		if (m_dwActionCur != dfACTION_MOVE_LL && g_playerObject == this) {
 
 			m_dwActionCur = dfACTION_MOVE_LL;
 			st_NETWORK_PACKET_HEADER header;
@@ -266,7 +267,7 @@ void PlayerObject::InputActionProc()
 			m_iCurY = dfRANGE_MOVE_TOP;
 			break;
 		}
-		if (m_dwActionCur != dfACTION_MOVE_RU) {
+		if (m_dwActionCur != dfACTION_MOVE_RU && g_playerObject == this) {
 			m_dwActionCur = dfACTION_MOVE_RU;
 			st_NETWORK_PACKET_HEADER header;
 			stPACKET_CS_MOVE_START packet;
@@ -296,7 +297,7 @@ void PlayerObject::InputActionProc()
 			break;
 		}
 
-		if (m_dwActionCur != dfACTION_MOVE_RD) {
+		if (m_dwActionCur != dfACTION_MOVE_RD && g_playerObject == this) {
 			m_dwActionCur = dfACTION_MOVE_RD;
 			st_NETWORK_PACKET_HEADER header;
 			stPACKET_CS_MOVE_START packet;
@@ -319,7 +320,7 @@ void PlayerObject::InputActionProc()
 			m_iCurX = dfRANGE_MOVE_RIGHT;
 			break;
 		}
-		if (m_dwActionCur != dfACTION_MOVE_RR) {
+		if (m_dwActionCur != dfACTION_MOVE_RR && g_playerObject == this) {
 			m_dwActionCur = dfACTION_MOVE_RR;
 			st_NETWORK_PACKET_HEADER header;
 			stPACKET_CS_MOVE_START packet;
@@ -339,7 +340,7 @@ void PlayerObject::InputActionProc()
 			m_iCurY = dfRANGE_MOVE_TOP;
 			break;
 		}
-		if (m_dwActionCur != dfACTION_MOVE_UU) {
+		if (m_dwActionCur != dfACTION_MOVE_UU && g_playerObject == this) {
 			m_dwActionCur = dfACTION_MOVE_UU;
 			st_NETWORK_PACKET_HEADER header;
 			stPACKET_CS_MOVE_START packet;
@@ -359,7 +360,7 @@ void PlayerObject::InputActionProc()
 			m_iCurY = dfRANGE_MOVE_BOTTOM;
 			break;
 		}
-		if (m_dwActionCur != dfACTION_MOVE_DD) {
+		if (m_dwActionCur != dfACTION_MOVE_DD && g_playerObject == this) {
 			m_dwActionCur = dfACTION_MOVE_DD;
 			st_NETWORK_PACKET_HEADER header;
 			stPACKET_CS_MOVE_START packet;
@@ -371,7 +372,7 @@ void PlayerObject::InputActionProc()
 
 	case dfACTION_ATTACK1: {
 		SetActionAttack1();
-		if (m_dwActionCur != dfACTION_ATTACK1) {
+		if (m_dwActionCur != dfACTION_ATTACK1 && g_playerObject == this) {
 			m_dwActionCur = dfACTION_ATTACK1;
 			st_NETWORK_PACKET_HEADER header;
 			stPACKET_CS_MOVE_STOP packet;
@@ -392,7 +393,7 @@ void PlayerObject::InputActionProc()
 		break;
 	case dfACTION_ATTACK2: {
 		SetActionAttack2();
-		if (m_dwActionCur != dfACTION_ATTACK2) {
+		if (m_dwActionCur != dfACTION_ATTACK2 && g_playerObject == this) {
 			m_dwActionCur = dfACTION_ATTACK2;
 			st_NETWORK_PACKET_HEADER header;
 			stPACKET_CS_MOVE_STOP packet;
@@ -414,7 +415,7 @@ void PlayerObject::InputActionProc()
 	case dfACTION_ATTACK3: {
 		SetActionAttack3();
 
-		if (m_dwActionCur != dfACTION_ATTACK3) {
+		if (m_dwActionCur != dfACTION_ATTACK3 && g_playerObject == this) {
 			m_dwActionCur = dfACTION_ATTACK3;
 			st_NETWORK_PACKET_HEADER header;
 			stPACKET_CS_MOVE_STOP packet;
@@ -434,8 +435,8 @@ void PlayerObject::InputActionProc()
 	}
 		break;
 	case dfACTION_STAND: {
-		if (m_dwActionCur != dfACTION_STAND) {
-			SetActionStand();
+		SetActionStand();
+		if (g_playerObject == this) {
 			st_NETWORK_PACKET_HEADER header;
 			stPACKET_CS_MOVE_STOP packet;
 			if (GetDirection())
