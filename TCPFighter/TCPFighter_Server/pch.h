@@ -11,4 +11,13 @@
 
 // TODO: 여기에 미리 컴파일하려는 헤더 추가
 
+#pragma comment(lib, "ws2_32.lib")
+
+#include <iostream>
+#include <stdlib.h>
+#include <WinSock2.h>
+#include <ws2tcpip.h>
+#include <list>
+#include <map>
+
 #endif //PCH_H
