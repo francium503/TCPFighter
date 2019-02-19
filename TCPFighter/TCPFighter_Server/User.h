@@ -6,7 +6,7 @@ class StreamQ;
 class User
 {
 public:
-	User();
+	User(DWORD uID);
 	~User();
 	
 	BOOL NetRecvUser();

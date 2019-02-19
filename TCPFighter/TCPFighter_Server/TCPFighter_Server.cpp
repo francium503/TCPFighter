@@ -8,16 +8,16 @@
 #include "PacketBuffer.h"
 #include "Protocol.h"
 #include "User.h"
-
-#define dfNETWORK_PORT 20000
-
+#include "Network.h"
+#include "TCPFighter_Server.h"
 
 
 SOCKET g_ListenSocket = INVALID_SOCKET;
 
-UINT64 g_UserNo = 1;
+DWORD g_UID = 1;
 unsigned int TPS = 0;
 unsigned int CONNECT = 0;
+
 
 FD_SET readSet;
 FD_SET writeSet;
@@ -37,7 +37,7 @@ int main()
 
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
 		std::cout << GetLastError() << std::endl;
-		return -30;
+		return -40;
 	}
 
 	SOCKADDR_IN serverAddr;
@@ -46,28 +46,28 @@ int main()
 
 	if (g_ListenSocket == INVALID_SOCKET) {
 		std::cout << GetLastError() << std::endl;
-		return -39;
+		return -49;
 	}
 
 	memset(&serverAddr, 0, sizeof(serverAddr));
 
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	serverAddr.sin_port = htons(dfNETWORK_PORT);
+	serverAddr.sin_port = htons(dfPORT);
 
 	int retval = bind(g_ListenSocket, (SOCKADDR *)&serverAddr, sizeof(serverAddr));
 
 
 	if (retval == SOCKET_ERROR) {
 		std::cout << GetLastError() << std::endl;
-		return -55;
+		return -63;
 	}
 
 	retval = listen(g_ListenSocket, 0);
 
 	if (retval == SOCKET_ERROR) {
 		std::cout << GetLastError() << std::endl;
-		return -62;
+		return -70;
 	}
 
 	u_long on = 1;
@@ -76,7 +76,7 @@ int main()
 
 	if (retval == SOCKET_ERROR) {
 		std::cout << GetLastError() << std::endl;
-		return -71;
+		return -79;
 	}
 
 	TIMEVAL tVal;
@@ -106,7 +106,7 @@ int main()
 		if (FD_ISSET(g_ListenSocket, &readSet)) {
 			// connect 시킴
 
-			User *newUser = new User;
+			User *newUser = new User(g_UID++);
 			SOCKADDR_IN clientAddr;
 			int addrLen = sizeof(clientAddr);
 
@@ -122,7 +122,6 @@ int main()
 				std::cout << "User Connect Ip : " << ipv4Addr << " port : " << ntohs(clientAddr.sin_port) << std::endl;
 				g_UserList.push_back(newUser);
 			}
-
 		}
 
 
@@ -287,8 +286,8 @@ BOOL PacketProcess(User * pPacketUser, st_PACKET_HEADER packHeader)
 
 	switch (packHeader.byType) {
 		//TODO 패킷 메세지 처리부
-	case df_REQ_STRESS_ECHO:
-		return NetPacket_ReqStressEcho(pPacketUser, &pack);
+	case dfPACKET_CS_MOVE_START:
+		//return NetPacket_ReqMoveStart(pPacketUser, &pack);
 		break;
 
 	default:

@@ -12,6 +12,7 @@
 // TODO: 여기에 미리 컴파일하려는 헤더 추가
 
 #pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "Winmm.lib")
 
 #include <iostream>
 #include <stdlib.h>
@@ -19,5 +20,6 @@
 #include <ws2tcpip.h>
 #include <list>
 #include <map>
+#include <Windows.h>
 
 #endif //PCH_H

@@ -156,6 +156,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Protocol.h" />
     <ClInclude Include="StreamQ.h" />
+    <ClInclude Include="TCPFighter_Server.h" />
     <ClInclude Include="User.h" />
   </ItemGroup>
   <ItemGroup>
