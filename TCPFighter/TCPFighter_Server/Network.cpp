@@ -71,7 +71,7 @@ BOOL NetPacket_ReqMoveStart(User * packUser, PacketBuffer * pPackBuffer)
 
 	Send_Around(packUser, &sendPack, true);
 	
-	return true;
+	return TRUE;
 }
 
 BOOL NetPacket_ReqMoveStop(User * packUser, PacketBuffer * pPackBuffer)
@@ -97,8 +97,24 @@ BOOL NetPacket_ReqMoveStop(User * packUser, PacketBuffer * pPackBuffer)
 		y = drY;
 	}
 
+	switch (packUser->m_action) {
+	case dfPACKET_MOVE_DIR_RR:
+	case dfPACKET_MOVE_DIR_RD:
+	case dfPACKET_MOVE_DIR_RU:
+		packUser->m_direction = dfPACKET_MOVE_DIR_RR;
+		break;
+
+	case dfPACKET_MOVE_DIR_LL:
+	case dfPACKET_MOVE_DIR_LD:
+	case dfPACKET_MOVE_DIR_LU:
+		packUser->m_direction = dfPACKET_MOVE_DIR_LL;
+		break;
+
+	default:
+		break;
+
+	}
 	packUser->m_action = dfACTION_STAND;
-	packUser->m_direction = direction;
 	packUser->m_X = x;
 	packUser->m_Y = y;
 
@@ -114,7 +130,7 @@ BOOL NetPacket_ReqMoveStop(User * packUser, PacketBuffer * pPackBuffer)
 
 	Send_Around(packUser, &sendPack, true);
 
-	return true;
+	return TRUE;
 }
 
 BOOL NetPacket_ReqAttack1(User * packUser, PacketBuffer * pPackBuffer)
@@ -127,23 +143,149 @@ BOOL NetPacket_ReqAttack1(User * packUser, PacketBuffer * pPackBuffer)
 
 	std::list<User*> *sector = &g_Sector[packUser->m_curSector.y][packUser->m_curSector.x];
 
+	PacketBuffer pack(15000);
+	
+	MakePacket_Attack1(&pack, packUser);
+
+	Send_Around(packUser, &pack, true);
+
 	auto iter = sector->begin();
 
 	while (iter != sector->end()) {
-		
+		if (isHit(packUser, (*iter))) {
+			if (packUser == (*iter)) {
+				++iter;
+				continue;
+			}
+
+			if ((*iter)->m_HP >= dfATTACK1_DAMAGE)
+				(*iter)->m_HP -= dfATTACK1_DAMAGE;
+			else
+				(*iter)->m_HP = 0;
+
+			MakePacket_Damage(&pack, packUser, *iter);
+
+			Send_Around(*iter, &pack, true);
+
+		}
+		++iter;
 	}
 
-	return 0;
+	return TRUE;
 }
 
 BOOL NetPacket_ReqAttack2(User * packUser, PacketBuffer * pPackBuffer)
 {
-	return 0;
+	BYTE direction;
+	WORD x;
+	WORD y;
+
+	*pPackBuffer >> direction >> x >> y;
+
+	std::list<User*> *sector = &g_Sector[packUser->m_curSector.y][packUser->m_curSector.x];
+
+	PacketBuffer pack(15000);
+
+	MakePacket_Attack2(&pack, packUser);
+
+	Send_Around(packUser, &pack, true);
+
+	auto iter = sector->begin();
+
+	while (iter != sector->end()) {
+		if (isHit(packUser, (*iter))) {
+			if (packUser == (*iter)) {
+				++iter;
+				continue;
+			}
+
+			if ((*iter)->m_HP >= dfATTACK2_DAMAGE)
+				(*iter)->m_HP -= dfATTACK2_DAMAGE;
+			else
+				(*iter)->m_HP = 0;
+
+			MakePacket_Damage(&pack, packUser, *iter);
+
+			Send_Around(*iter, &pack, true);
+
+		}
+		++iter;
+	}
+
+	return TRUE;
 }
 
 BOOL NetPacket_ReqAttack3(User * packUser, PacketBuffer * pPackBuffer)
 {
-	return 0;
+	BYTE direction;
+	WORD x;
+	WORD y;
+
+	*pPackBuffer >> direction >> x >> y;
+
+	std::list<User*> *sector = &g_Sector[packUser->m_curSector.y][packUser->m_curSector.x];
+
+	PacketBuffer pack(15000);
+
+	MakePacket_Attack3(&pack, packUser);
+
+	Send_Around(packUser, &pack, true);
+
+	auto iter = sector->begin();
+
+	while (iter != sector->end()) {
+		if (isHit(packUser, (*iter))) {
+			if (packUser == (*iter)) {
+				++iter;
+				continue;
+			}
+
+			if ((*iter)->m_HP >= dfATTACK3_DAMAGE)
+				(*iter)->m_HP -= dfATTACK3_DAMAGE;
+			else
+				(*iter)->m_HP = 0;
+
+			MakePacket_Damage(&pack, packUser, *iter);
+
+			Send_Around(*iter, &pack, true);
+		}
+		++iter;
+	}
+
+	return TRUE;
+}
+
+BOOL NetPacket_ReqSync(User * packUser, PacketBuffer * pPackBuffer)
+{
+
+	PacketBuffer pack(15000);
+
+	MakePacket_Sync(&pack, packUser);
+
+	Send_Unicast(packUser, &pack);
+
+	return TRUE;
+}
+
+BOOL NetPacket_ReqEcho(User * packUser, PacketBuffer * pPackBuffer)
+{
+	PacketBuffer pack(15000);
+
+	st_PACKET_HEADER packHeader;
+
+	packHeader.byCode = dfNETWORK_PACKET_CODE;
+	packHeader.bySize = 4;
+	packHeader.byType = (BYTE)(253);
+
+	pack.Clear();
+	pack.PutData((char *)&packHeader, sizeof(st_PACKET_HEADER));
+	pack.PutData(pPackBuffer->GetBufferPtr(), pPackBuffer->GetDataSize());
+
+	pack << dfNETWORK_PACKET_END;
+
+	Send_Unicast(packUser, &pack);
+
+	return TRUE;
 }
 
 
@@ -231,6 +373,62 @@ void MakePacket_RemoveCharacter(PacketBuffer * pack, User * deleteUser)
 	*pack << deleteUser->m_uID << dfNETWORK_PACKET_END;
 }
 
+void MakePacket_Attack1(PacketBuffer * pack, User * attackUser)
+{
+	st_PACKET_HEADER packHeader;
+
+	packHeader.byCode = dfNETWORK_PACKET_CODE;
+	packHeader.bySize = 9;
+	packHeader.byType = dfPACKET_SC_ATTACK1;
+
+	pack->Clear();
+
+	pack->PutData((char *)&packHeader, sizeof(st_PACKET_HEADER));
+	*pack << attackUser->m_uID << attackUser->m_direction << attackUser->m_X << attackUser->m_Y << dfNETWORK_PACKET_END;
+}
+
+void MakePacket_Attack2(PacketBuffer * pack, User * attackUser)
+{
+	st_PACKET_HEADER packHeader;
+
+	packHeader.byCode = dfNETWORK_PACKET_CODE;
+	packHeader.bySize = 9;
+	packHeader.byType = dfPACKET_SC_ATTACK2;
+
+	pack->Clear();
+
+	pack->PutData((char *)&packHeader, sizeof(st_PACKET_HEADER));
+	*pack << attackUser->m_uID << attackUser->m_direction << attackUser->m_X << attackUser->m_Y << dfNETWORK_PACKET_END;
+}
+
+void MakePacket_Attack3(PacketBuffer * pack, User * attackUser)
+{
+	st_PACKET_HEADER packHeader;
+
+	packHeader.byCode = dfNETWORK_PACKET_CODE;
+	packHeader.bySize = 9;
+	packHeader.byType = dfPACKET_SC_ATTACK3;
+
+	pack->Clear();
+
+	pack->PutData((char *)&packHeader, sizeof(st_PACKET_HEADER));
+	*pack << attackUser->m_uID << attackUser->m_direction << attackUser->m_X << attackUser->m_Y << dfNETWORK_PACKET_END;
+}
+
+void MakePacket_Damage(PacketBuffer * pack, User * attackUser, User * damagedUser)
+{
+	st_PACKET_HEADER packHeader;
+
+	packHeader.byCode = dfNETWORK_PACKET_CODE;
+	packHeader.bySize = 9;
+	packHeader.byType = dfPACKET_SC_DAMAGE;
+
+	pack->Clear();
+
+	pack->PutData((char *)&packHeader, sizeof(st_PACKET_HEADER));
+	*pack << attackUser->m_uID << damagedUser->m_uID << damagedUser->m_HP << dfNETWORK_PACKET_END;
+}
+
 
 
 
@@ -238,8 +436,8 @@ void NewUserJoin(User * pUser)
 {
 	PacketBuffer pack(15000);
 
-	pUser->m_X = 10;
-	pUser->m_Y = 10;
+	pUser->m_X = rand()% 6400;
+	pUser->m_Y = rand() % 6400;
 	pUser->m_action = dfACTION_STAND;
 	pUser->m_direction = dfACTION_MOVE_LL;
 
@@ -249,7 +447,41 @@ void NewUserJoin(User * pUser)
 
 	Send_Unicast(pUser, &pack);
 
-	UserSectorUpdatePacket(pUser);
+	MakePacket_CreateOtherCharacter(&pack, pUser);
+
+	Send_Around(pUser, &pack, false);
+
+	st_SECTOR_AROUND around;
+
+	GetSectorAround(pUser->m_curSector.x, pUser->m_curSector.y, &around);
+
+	for (int cnt = 0; cnt < around.Count; ++cnt) {
+		auto sector = g_Sector[around.Around[cnt].y][around.Around[cnt].x];
+		for (auto iter = sector.begin(); iter != sector.end(); ++iter) {
+			if ((*iter) == pUser)
+				continue;
+
+			MakePacket_CreateOtherCharacter(&pack, *iter);
+
+			Send_Unicast(pUser, &pack);
+
+			switch ((*iter)->m_action) {
+
+			case dfACTION_MOVE_DD:
+			case dfACTION_MOVE_LD:
+			case dfACTION_MOVE_RD:
+			case dfACTION_MOVE_RR:
+			case dfACTION_MOVE_LL:
+			case dfACTION_MOVE_RU:
+			case dfACTION_MOVE_LU:
+			case dfACTION_MOVE_UU:
+				MakePacket_MoveStart(&pack, (*iter));
+
+				Send_Unicast(pUser, &pack);
+				break;
+			}
+		}
+	}
 }
 
 void UserSectorUpdatePacket(User * pUser)
@@ -465,7 +697,18 @@ int DeadReckoningPos(DWORD dwAction, DWORD dwActionTick, int iOldPosX, int iOldP
 
 BOOL isHit(User * attacker, User * defender)
 {
+	if (attacker->m_Y + 5 >= defender->m_Y && attacker->m_Y - 5 <= defender->m_Y) {
+		if (attacker->m_direction == dfACTION_MOVE_LL) {
+			if (attacker->m_X - dfATTACK_RANGE <= defender->m_X && attacker->m_X >= defender->m_X)
+				return TRUE;
+		}
+		else if(attacker->m_direction == dfACTION_MOVE_RR){
+			if (attacker->m_X + dfATTACK_RANGE >= defender->m_X && attacker->m_X <= defender->m_X)
+				return TRUE;
+		}
+	}
 
+	return FALSE;
 }
 
 void Send_Unicast(User * pClient, PacketBuffer * resPack)
@@ -500,7 +743,7 @@ void Send_Around(User * pClient, PacketBuffer * resPack, bool includeClient)
 		sectorList = &g_Sector[around.Around[i].y][around.Around[i].x];
 
 		for (auto iter = sectorList->begin(); iter != sectorList->end(); ++iter) {
-			if (pClient == *iter && includeClient == true)
+			if (pClient == *iter && includeClient == false)
 				continue;
 
 			Send_Unicast(*iter, resPack);

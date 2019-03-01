@@ -162,10 +162,11 @@ BOOL PacketProcess(User * pPacketUser, st_PACKET_HEADER packHeader)
 	pPacketUser->m_pRecvQ->DeQueue((char *)&recvHeader, sizeof(recvHeader));
 	pPacketUser->m_pRecvQ->DeQueue(pack.GetBufferPtr(), payloadSize);
 	pPacketUser->m_pRecvQ->DeQueue((char*)&endcode, sizeof(endcode));
-	pack.MoveWritePos(payloadSize + sizeof(endcode));
+	pack.MoveWritePos(payloadSize);
 
+
+	//TODO 패킷 메세지 처리부
 	switch (packHeader.byType) {
-		//TODO 패킷 메세지 처리부
 	case dfPACKET_CS_MOVE_START:
 		return NetPacket_ReqMoveStart(pPacketUser, &pack);
 		break;
@@ -174,7 +175,7 @@ BOOL PacketProcess(User * pPacketUser, st_PACKET_HEADER packHeader)
 		return NetPacket_ReqMoveStop(pPacketUser, &pack);
 		break;
 
-	/*case dfPACKET_CS_ATTACK1:
+	case dfPACKET_CS_ATTACK1:
 		return NetPacket_ReqAttack1(pPacketUser, &pack);
 		break;
 
@@ -185,7 +186,16 @@ BOOL PacketProcess(User * pPacketUser, st_PACKET_HEADER packHeader)
 	case dfPACKET_CS_ATTACK3:
 		return NetPacket_ReqAttack3(pPacketUser, &pack);
 		break;
-		*/
+
+	//case dfPACKET_SC_SYNC:
+		//return NetPacket_ReqSync(pPacketUser, &pack);
+		//break;
+
+	case (BYTE)(252) :
+		return NetPacket_ReqEcho(pPacketUser, &pack);
+		break;
+
+		
 	default:
 		return FALSE;
 	}
@@ -410,12 +420,14 @@ void Update()
 		pUser = *iter;
 		++iter;
 
-		if (pUser->m_HP <= 0) {
+/*		if (pUser->m_HP <= 0) {
 			//TODO 피없으면 사망처리
 
 			UserDisconnect(pUser);
 			continue;
 		}
+
+		*/
 
 		switch (pUser->m_action) {
 		case dfACTION_MOVE_LL:

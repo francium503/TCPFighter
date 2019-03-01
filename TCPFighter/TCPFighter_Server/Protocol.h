@@ -354,6 +354,12 @@ struct st_PACKET_HEADER {
 #define dfSECTOR_PIXEL_WIDTH 320
 #define dfSECTOR_PIXEL_HEIGHT 320
 
+#define dfATTACK_RANGE 100
+
+#define dfATTACK1_DAMAGE 3
+#define dfATTACK2_DAMAGE 3
+#define dfATTACK3_DAMAGE 4
+
 
 
 #endif
