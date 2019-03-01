@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Sector.h"
+
 class StreamQ;
 
 
@@ -21,5 +23,11 @@ public:
 	WORD m_Y;
 	BYTE m_HP;
 	BYTE m_direction;
+	BYTE m_action;
+	DWORD m_lastActionTime;
+	WORD m_lastActionX;
+	WORD m_lastActionY;
+	st_SECTOR_POS m_curSector;
+	st_SECTOR_POS m_oldSector;
 };
 

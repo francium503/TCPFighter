@@ -1,7 +1,5 @@
 #pragma once
 
-#include <Windows.h>
-
 class PacketBuffer
 {
 public:
@@ -55,6 +53,8 @@ public:
 	PacketBuffer& operator<<(const float frhs);
 	PacketBuffer& operator<<(const double drhs);
 	PacketBuffer& operator<<(const __int64 i64rhs);
+	PacketBuffer& operator<<(const WORD wrhs);
+	PacketBuffer& operator<<(const DWORD dwrhs);
 
 
 	// 빼기 연산자 오버로딩
@@ -65,6 +65,8 @@ public:
 	PacketBuffer& operator>>(float &frhs);
 	PacketBuffer& operator>>(double &drhs);
 	PacketBuffer& operator>>(__int64 &i64rhs);
+	PacketBuffer& operator>>(WORD &wrhs);
+	PacketBuffer& operator>>(DWORD &dwrhs);
 
 	// 직접 빼기
 	int GetData(char *chpDest, int iGetSize);

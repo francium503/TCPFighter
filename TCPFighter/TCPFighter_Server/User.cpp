@@ -2,6 +2,8 @@
 #include "User.h"
 #include "StreamQ.h"
 
+extern std::list<User *> g_UserList;
+
 User::User(DWORD uID)
 {
 	m_pRecvQ = new StreamQ(15000);
@@ -10,11 +12,19 @@ User::User(DWORD uID)
 	m_HP = 100;
 	m_X = 10;
 	m_Y = 10;
+	m_curSector.x = -1;
+	m_curSector.y = -1;
+	m_oldSector.x = -1;
+	m_oldSector.y = -1;
 }
 
 
 User::~User()
 {
+	delete m_pRecvQ;
+	delete m_pSendQ;
+	
+	closesocket(m_socClient);
 }
 
 BOOL User::NetRecvUser()
@@ -36,6 +46,7 @@ BOOL User::NetRecvUser()
 
 	if (retval == 0) {
 		// TODO disconnect Ã³¸®
+		return FALSE;
 	}
 
 	m_pRecvQ->MoveRear(retval);

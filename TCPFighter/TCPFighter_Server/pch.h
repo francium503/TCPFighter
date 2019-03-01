@@ -21,5 +21,6 @@
 #include <list>
 #include <map>
 #include <Windows.h>
+#include <Time.h>
 
 #endif //PCH_H

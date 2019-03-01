@@ -110,6 +110,7 @@ PacketBuffer & PacketBuffer::operator<<(const BYTE brhs)
 
 	memcpy_s(&m_chpBuffer[m_iWritePos], size, &brhs, size);
 	m_iWritePos += size;
+	m_iDataSize += size;
 
 	return *this;
 }
@@ -122,6 +123,7 @@ PacketBuffer & PacketBuffer::operator<<(const char chrhs)
 
 	memcpy_s(&m_chpBuffer[m_iWritePos], size, &chrhs, size);
 	m_iWritePos += size;
+	m_iDataSize += size;
 
 	return *this;
 }
@@ -134,6 +136,7 @@ PacketBuffer & PacketBuffer::operator<<(const short shrhs)
 
 	memcpy_s(&m_chpBuffer[m_iWritePos], size, &shrhs, size);
 	m_iWritePos += size;
+	m_iDataSize += size;
 
 	return *this;
 }
@@ -145,6 +148,7 @@ PacketBuffer & PacketBuffer::operator<<(const int irhs)
 
 	memcpy_s(&m_chpBuffer[m_iWritePos], size, &irhs, size);
 	m_iWritePos += size;
+	m_iDataSize += size;
 
 	return *this;
 }
@@ -157,6 +161,7 @@ PacketBuffer & PacketBuffer::operator<<(const float frhs)
 
 	memcpy_s(&m_chpBuffer[m_iWritePos], size, &frhs, size);
 	m_iWritePos += size;
+	m_iDataSize += size;
 
 	return *this;
 }
@@ -169,6 +174,7 @@ PacketBuffer & PacketBuffer::operator<<(const double drhs)
 
 	memcpy_s(&m_chpBuffer[m_iWritePos], size, &drhs, size);
 	m_iWritePos += size;
+	m_iDataSize += size;
 
 	return *this;
 }
@@ -181,6 +187,33 @@ PacketBuffer & PacketBuffer::operator<<(const __int64 i64rhs)
 
 	memcpy_s(&m_chpBuffer[m_iWritePos], size, &i64rhs, size);
 	m_iWritePos += size;
+	m_iDataSize += size;
+
+	return *this;
+}
+
+PacketBuffer & PacketBuffer::operator<<(const WORD wrhs)
+{
+	int size = sizeof(WORD);
+	if (m_iWritePos + size >= m_iBufferSize)
+		return *this;
+
+	memcpy_s(&m_chpBuffer[m_iWritePos], size, &wrhs, size);
+	m_iWritePos += size;
+	m_iDataSize += size;
+
+	return *this;
+}
+
+PacketBuffer & PacketBuffer::operator<<(const DWORD dwrhs)
+{
+	int size = sizeof(DWORD);
+	if (m_iWritePos + size >= m_iBufferSize)
+		return *this;
+
+	memcpy_s(&m_chpBuffer[m_iWritePos], size, &dwrhs, size);
+	m_iWritePos += size;
+	m_iDataSize += size;
 
 	return *this;
 }
@@ -193,6 +226,7 @@ PacketBuffer & PacketBuffer::operator>>(BYTE & brhs)
 
 	memcpy_s(&brhs, size , &m_chpBuffer[m_iReadPos], size);
 	m_iReadPos += size;
+	m_iDataSize -= size;
 
 	return *this;
 }
@@ -205,6 +239,7 @@ PacketBuffer & PacketBuffer::operator>>(char & chrhs)
 
 	memcpy_s(&chrhs, size, &m_chpBuffer[m_iReadPos], size);
 	m_iReadPos += size;
+	m_iDataSize -= size;
 
 	return *this;
 }
@@ -217,6 +252,7 @@ PacketBuffer & PacketBuffer::operator>>(short & shrhs)
 
 	memcpy_s(&shrhs, size, &m_chpBuffer[m_iReadPos], size);
 	m_iReadPos += size;
+	m_iDataSize -= size;
 
 	return *this;
 }
@@ -229,6 +265,7 @@ PacketBuffer & PacketBuffer::operator>>(int & irhs)
 
 	memcpy_s(&irhs, size, &m_chpBuffer[m_iReadPos], size);
 	m_iReadPos += size;
+	m_iDataSize -= size;
 
 	return *this;
 }
@@ -241,6 +278,7 @@ PacketBuffer & PacketBuffer::operator>>(float & frhs)
 
 	memcpy_s(&frhs, size, &m_chpBuffer[m_iReadPos], size);
 	m_iReadPos += size;
+	m_iDataSize -= size;
 
 	return *this;
 }
@@ -253,6 +291,7 @@ PacketBuffer & PacketBuffer::operator>>(double & drhs)
 
 	memcpy_s(&drhs, size, &m_chpBuffer[m_iReadPos], size);
 	m_iReadPos += size;
+	m_iDataSize -= size;
 
 	return *this;
 }
@@ -265,6 +304,33 @@ PacketBuffer & PacketBuffer::operator>>(__int64 & i64rhs)
 
 	memcpy_s(&i64rhs, size, &m_chpBuffer[m_iReadPos], size);
 	m_iReadPos += size;
+	m_iDataSize -= size;
+
+	return *this;
+}
+
+PacketBuffer & PacketBuffer::operator>>(WORD & wrhs)
+{
+	int size = sizeof(WORD);
+	if (m_iReadPos + size > m_iWritePos)
+		return *this;
+
+	memcpy_s(&wrhs, size, &m_chpBuffer[m_iReadPos], size);
+	m_iReadPos += size;
+	m_iDataSize -= size;
+
+	return *this;
+}
+
+PacketBuffer & PacketBuffer::operator>>(DWORD & dwrhs)
+{
+	int size = sizeof(DWORD);
+	if (m_iReadPos + size > m_iWritePos)
+		return *this;
+
+	memcpy_s(&dwrhs, size, &m_chpBuffer[m_iReadPos], size);
+	m_iReadPos += size;
+	m_iDataSize -= size;
 
 	return *this;
 }
