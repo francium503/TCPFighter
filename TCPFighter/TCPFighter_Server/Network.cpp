@@ -22,14 +22,17 @@ BOOL NetPacket_ReqMoveStart(User * packUser, PacketBuffer * pPackBuffer)
 
 	//TODO 单靛饭目醋 贸府
 	if ( abs(packUser->m_X - x) > dfERROR_RANGE || abs(packUser->m_Y - y) > dfERROR_RANGE) {
-		int drX;
-		int drY;
+		int drX = packUser->m_X;
+		int drY = packUser->m_Y;
 
-		int frame = DeadReckoningPos(packUser->m_action, packUser->m_lastActionTime, packUser->m_X, packUser->m_Y, &drX, &drY);
+		int frame = DeadReckoningPos(packUser->m_action, packUser->m_lastActionTime, packUser->m_lastActionX, packUser->m_lastActionY, &drX, &drY);
 
 		if (abs(drX - x) > dfERROR_RANGE || abs(drY - y) > dfERROR_RANGE) {
+			packUser->m_X = drX;
+			packUser->m_Y = drY;
 			MakePacket_Sync(&sendPack, packUser);
 			Send_Around(packUser, &sendPack, true);
+
 		}
 		x = drX;
 		y = drY;
@@ -84,12 +87,14 @@ BOOL NetPacket_ReqMoveStop(User * packUser, PacketBuffer * pPackBuffer)
 	*pPackBuffer >> direction >> x >> y;
 
 	if (abs(packUser->m_X - x) > dfERROR_RANGE || abs(packUser->m_Y - y) > dfERROR_RANGE) {
-		int drX;
-		int drY;
+		int drX = packUser->m_X;
+		int drY = packUser->m_Y;
 
-		int frame = DeadReckoningPos(packUser->m_action, packUser->m_lastActionTime, packUser->m_X, packUser->m_Y, &drX, &drY);
+		int frame = DeadReckoningPos(packUser->m_action, packUser->m_lastActionTime, packUser->m_lastActionX, packUser->m_lastActionY, &drX, &drY);
 
 		if (abs(drX - x) > dfERROR_RANGE || abs(drY - y) > dfERROR_RANGE) {
+			packUser->m_X = drX;
+			packUser->m_Y = drY;
 			MakePacket_Sync(&sendPack, packUser);
 			Send_Around(packUser, &sendPack, true);
 		}
@@ -436,17 +441,19 @@ void NewUserJoin(User * pUser)
 {
 	PacketBuffer pack(15000);
 
-	pUser->m_X = rand()% 6400;
-	pUser->m_Y = rand() % 6400;
+	pUser->m_X = (rand() % (dfRANGE_MOVE_RIGHT - 1)) + 1;
+	pUser->m_Y = (rand() % (dfRANGE_MOVE_BOTTOM - 1)) + 1;
 	pUser->m_action = dfACTION_STAND;
 	pUser->m_direction = dfACTION_MOVE_LL;
+	pUser->m_lastActionTime = timeGetTime();
+	pUser->m_lastActionX = pUser->m_X;
+	pUser->m_lastActionY = pUser->m_Y;
 
 	SectorAddUser(pUser);
 
 	MakePacket_CreateMyCharacter(&pack, pUser);
 
 	Send_Unicast(pUser, &pack);
-
 	MakePacket_CreateOtherCharacter(&pack, pUser);
 
 	Send_Around(pUser, &pack, false);
@@ -520,9 +527,12 @@ void UserSectorUpdatePacket(User * pUser)
 		Send_Sector(&pack, addSec.Around[cnt].x, addSec.Around[cnt].y);
 	}
 
-
-	MakePacket_MoveStart(&pack, pUser);
-
+	if (pUser->m_action == dfACTION_STAND)
+		MakePacket_MoveStop(&pack, pUser);
+	else {
+		MakePacket_MoveStart(&pack, pUser);
+	}
+	
 	for (cnt = 0; cnt < addSec.Count; ++cnt) {
 		Send_Sector(&pack, addSec.Around[cnt].x, addSec.Around[cnt].y);
 	}
@@ -548,6 +558,12 @@ void UserSectorUpdatePacket(User * pUser)
 				case dfACTION_MOVE_LU:
 				case dfACTION_MOVE_UU:
 					MakePacket_MoveStart(&pack, pExistUser);
+
+					Send_Unicast(pUser, &pack);
+					break;
+
+				case dfACTION_STAND:
+					MakePacket_MoveStop(&pack, pExistUser);
 
 					Send_Unicast(pUser, &pack);
 					break;

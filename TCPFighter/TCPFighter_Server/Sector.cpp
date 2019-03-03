@@ -33,6 +33,8 @@ void SectorRemoveUser(User * pUser)
 	
 	std::list<User*> &sectorList = g_Sector[pUser->m_curSector.y][pUser->m_curSector.x];
 
+	sectorList.remove(pUser);
+	/*
 	auto iter = sectorList.begin();
 
 	while (iter != sectorList.end()) {
@@ -43,6 +45,7 @@ void SectorRemoveUser(User * pUser)
 
 		++iter;
 	}
+	*/
 
 	pUser->m_oldSector.x = pUser->m_curSector.x;
 	pUser->m_oldSector.y = pUser->m_curSector.y;
@@ -67,6 +70,19 @@ BOOL SectorUpdateUser(User * pUser)
 
 	pUser->m_oldSector.x = beforeSectorX;
 	pUser->m_oldSector.y = beforeSectorY;
+
+	/*
+	for (int x = 0; x < dfSECTOR_MAX_X; ++x) {
+		for (int y = 0; y < dfSECTOR_MAX_Y; ++y) {
+			if (g_Sector[y][x].size() != 0) {
+				wchar_t buff[256];
+				wsprintf(buff, L"sector[%d][%d] - %d\n", y, x, g_Sector[y][x].size());
+				OutputDebugString(buff);
+			}
+		}
+	}
+
+	*/
 
 	return true;
 }

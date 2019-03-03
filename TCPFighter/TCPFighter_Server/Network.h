@@ -35,4 +35,3 @@ BOOL isHit(User* attacker, User* defender);
 void Send_Unicast(User* pClient, PacketBuffer* resPack);
 void Send_Sector(PacketBuffer* resPack, int sectorX, int sectorY);
 void Send_Around(User* pClient, PacketBuffer* resPack, bool includeClient);
-//void Send_All(User* pClient, PacketBuffer* resPack);

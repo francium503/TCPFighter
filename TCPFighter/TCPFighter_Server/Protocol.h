@@ -319,8 +319,8 @@ struct st_PACKET_HEADER {
 
 #define dfRANGE_MOVE_TOP	0
 #define dfRANGE_MOVE_LEFT	0
-#define dfRANGE_MOVE_RIGHT	6400
-#define dfRANGE_MOVE_BOTTOM	6400
+#define dfRANGE_MOVE_RIGHT	6399
+#define dfRANGE_MOVE_BOTTOM	6399
 
 
 #define dfACTION_MOVE_LL 0

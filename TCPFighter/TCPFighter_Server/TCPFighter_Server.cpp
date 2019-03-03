@@ -434,6 +434,9 @@ void Update()
 			if (CharacterMoveCheck(pUser->m_X - dfSPEED_PLAYER_X, pUser->m_Y)) {
 				pUser->m_X -= dfSPEED_PLAYER_X;
 			}
+			else {
+				pUser->m_X = dfRANGE_MOVE_LEFT;
+			}
 			break;
 
 		case dfACTION_MOVE_LU:
@@ -441,11 +444,18 @@ void Update()
 				pUser->m_X -= dfSPEED_PLAYER_X;
 				pUser->m_Y -= dfSPEED_PLAYER_Y;
 			}
+			else {
+				pUser->m_X = dfRANGE_MOVE_LEFT;
+				pUser->m_Y = dfRANGE_MOVE_TOP;
+			}
 			break;
 
 		case dfACTION_MOVE_UU:
 			if (CharacterMoveCheck(pUser->m_X, pUser->m_Y - dfSPEED_PLAYER_Y)) {
 				pUser->m_Y -= dfSPEED_PLAYER_Y;
+			}
+			else {
+				pUser->m_Y = dfRANGE_MOVE_TOP;
 			}
 			break;
 
@@ -454,11 +464,18 @@ void Update()
 				pUser->m_X += dfSPEED_PLAYER_X;
 				pUser->m_Y -= dfSPEED_PLAYER_Y;
 			}
+			else {
+				pUser->m_X = dfRANGE_MOVE_RIGHT;
+				pUser->m_Y = dfRANGE_MOVE_TOP;
+			}
 			break;
 
 		case dfACTION_MOVE_RR:
 			if (CharacterMoveCheck(pUser->m_X + dfSPEED_PLAYER_X, pUser->m_Y)) {
 				pUser->m_X += dfSPEED_PLAYER_X;
+			}
+			else {
+				pUser->m_X = dfRANGE_MOVE_RIGHT;
 			}
 			break;
 
@@ -467,11 +484,18 @@ void Update()
 				pUser->m_X += dfSPEED_PLAYER_X;
 				pUser->m_Y += dfSPEED_PLAYER_Y;
 			}
+			else {
+				pUser->m_X = dfRANGE_MOVE_RIGHT;
+				pUser->m_Y = dfRANGE_MOVE_BOTTOM;
+			}
 			break;
 
 		case dfACTION_MOVE_DD:
 			if (CharacterMoveCheck(pUser->m_X, pUser->m_Y + dfSPEED_PLAYER_Y)) {
 				pUser->m_Y += dfSPEED_PLAYER_Y;
+			}
+			else {
+				pUser->m_Y = dfRANGE_MOVE_BOTTOM;
 			}
 			break;
 
@@ -479,6 +503,10 @@ void Update()
 			if (CharacterMoveCheck(pUser->m_X - dfSPEED_PLAYER_X, pUser->m_Y + dfSPEED_PLAYER_Y)) {
 				pUser->m_X -= dfSPEED_PLAYER_X;
 				pUser->m_Y += dfSPEED_PLAYER_Y;
+			}
+			else {
+				pUser->m_X = dfRANGE_MOVE_LEFT;
+				pUser->m_Y = dfRANGE_MOVE_BOTTOM;
 			}
 			break;
 		}
