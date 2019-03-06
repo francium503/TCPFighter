@@ -10,6 +10,7 @@
 
 extern std::list<User *> g_Sector[dfSECTOR_MAX_Y][dfSECTOR_MAX_X];
 extern int g_PacketSendCount;
+extern int g_DRCount;
 
 BOOL NetPacket_ReqMoveStart(User * packUser, PacketBuffer * pPackBuffer)
 {
@@ -22,6 +23,7 @@ BOOL NetPacket_ReqMoveStart(User * packUser, PacketBuffer * pPackBuffer)
 
 	//TODO 单靛饭目醋 贸府
 	if ( abs(packUser->m_X - x) > dfERROR_RANGE || abs(packUser->m_Y - y) > dfERROR_RANGE) {
+
 		int drX = packUser->m_X;
 		int drY = packUser->m_Y;
 
@@ -712,6 +714,7 @@ int DeadReckoningPos(DWORD dwAction, DWORD dwActionTick, int iOldPosX, int iOldP
 	*pPosX = rPosX;
 	*pPosY = rPosY;
 
+	g_DRCount++;
 	return actionFrame;
 }
 

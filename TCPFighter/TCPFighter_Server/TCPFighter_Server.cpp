@@ -24,6 +24,7 @@ int g_FrameCount = 0;
 int g_LoopCount = 0;
 int g_PacketProcessCount = 0;
 int g_PacketSendCount = 0;
+int g_DRCount = 0;
 
 std::list<User *> g_UserList;
 std::list<User *> g_Sector[dfSECTOR_MAX_Y][dfSECTOR_MAX_X];
@@ -407,6 +408,8 @@ void Monitor()
 	g_PacketProcessCount = 0;
 	Log(0, L"Packet send : %d per sec\n", g_PacketSendCount);
 	g_PacketSendCount = 0;
+	Log(0, L"DR count : %d\n", g_DRCount);
+	g_DRCount = 0;
 }
 
 void Update()
