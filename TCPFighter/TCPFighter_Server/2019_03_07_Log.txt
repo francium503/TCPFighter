@@ -1,0 +1,42 @@
+[2019-3-7 5:13:16]
+ Frame 1 Loop 1
+Packet : 0 per sec
+[2019-3-7 5:13:17]
+ Frame 50 Loop 285539
+Packet : 0 per sec
+[2019-3-7 5:13:18]
+ Frame 50 Loop 318300
+Packet : 0 per sec
+[2019-3-7 5:13:19]
+ Frame 50 Loop 311252
+Packet : 0 per sec
+[2019-3-7 5:13:20]
+ Frame 50 Loop 316633
+Packet : 0 per sec
+[2019-3-7 5:15:5]
+Frame 1 Loop 1
+Packet : 0 per sec
+[2019-3-7 5:15:6]
+Frame 50 Loop 295300
+Packet : 0 per sec
+[2019-3-7 5:15:7]
+Frame 50 Loop 308722
+Packet : 0 per sec
+[2019-3-7 5:15:8]
+Frame 50 Loop 303842
+Packet : 0 per sec
+[2019-3-7 5:15:9]
+Frame 50 Loop 316595
+Packet : 0 per sec
+[2019-3-7 5:15:10]
+Frame 50 Loop 321362
+Packet : 0 per sec
+[2019-3-7 5:15:11]
+Frame 50 Loop 311831
+Packet : 0 per sec
+[2019-3-7 5:15:12]
+Frame 50 Loop 309712
+Packet : 0 per sec
+[2019-3-7 5:15:13]
+Frame 50 Loop 327208
+Packet : 0 per sec

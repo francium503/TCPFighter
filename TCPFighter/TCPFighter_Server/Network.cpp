@@ -5,11 +5,11 @@
 #include "Network.h"
 #include "StreamQ.h"
 #include "Sector.h"
+#include "Log.h"
 
 
 extern std::list<User *> g_Sector[dfSECTOR_MAX_Y][dfSECTOR_MAX_X];
-
-
+extern int g_PacketSendCount;
 
 BOOL NetPacket_ReqMoveStart(User * packUser, PacketBuffer * pPackBuffer)
 {
@@ -728,6 +728,8 @@ void Send_Unicast(User * pClient, PacketBuffer * resPack)
 		return;
 
 	pClient->m_pSendQ->Enqueue(resPack->GetBufferPtr(), resPack->GetDataSize());
+
+	g_PacketSendCount++;
 }
 
 void Send_Sector(PacketBuffer * resPack, int sectorX, int sectorY)
