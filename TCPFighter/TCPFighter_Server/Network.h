@@ -15,6 +15,7 @@ BOOL NetPacket_ReqEcho(User* packUser, PacketBuffer* pPackBuffer);
 void MakePacket_MoveStart(PacketBuffer* pack, User* moveUser);
 void MakePacket_MoveStop(PacketBuffer* pack, User* stopUser);
 void MakePacket_Sync(PacketBuffer* pack, User* syncUser);
+void MakePacket_Sync(PacketBuffer *pack, DWORD userID, int syncX, int syncY);
 void MakePacket_CreateMyCharacter(PacketBuffer* pack, User* createUser);
 void MakePacket_CreateOtherCharacter(PacketBuffer* pack, User* createUser);
 void MakePacket_RemoveCharacter(PacketBuffer* pack, User* deleteUser);

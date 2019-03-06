@@ -28,11 +28,8 @@ BOOL NetPacket_ReqMoveStart(User * packUser, PacketBuffer * pPackBuffer)
 		int frame = DeadReckoningPos(packUser->m_action, packUser->m_lastActionTime, packUser->m_lastActionX, packUser->m_lastActionY, &drX, &drY);
 
 		if (abs(drX - x) > dfERROR_RANGE || abs(drY - y) > dfERROR_RANGE) {
-			packUser->m_X = drX;
-			packUser->m_Y = drY;
-			MakePacket_Sync(&sendPack, packUser);
+			MakePacket_Sync(&sendPack, packUser->m_uID, drX, drY);
 			Send_Around(packUser, &sendPack, true);
-
 		}
 		x = drX;
 		y = drY;
@@ -93,9 +90,7 @@ BOOL NetPacket_ReqMoveStop(User * packUser, PacketBuffer * pPackBuffer)
 		int frame = DeadReckoningPos(packUser->m_action, packUser->m_lastActionTime, packUser->m_lastActionX, packUser->m_lastActionY, &drX, &drY);
 
 		if (abs(drX - x) > dfERROR_RANGE || abs(drY - y) > dfERROR_RANGE) {
-			packUser->m_X = drX;
-			packUser->m_Y = drY;
-			MakePacket_Sync(&sendPack, packUser);
+			MakePacket_Sync(&sendPack, packUser->m_uID, drX, drY);
 			Send_Around(packUser, &sendPack, true);
 		}
 		x = drX;
@@ -122,6 +117,10 @@ BOOL NetPacket_ReqMoveStop(User * packUser, PacketBuffer * pPackBuffer)
 	packUser->m_action = dfACTION_STAND;
 	packUser->m_X = x;
 	packUser->m_Y = y;
+	
+	if (SectorUpdateUser(packUser)) {
+		UserSectorUpdatePacket(packUser);
+	}
 
 	packUser->m_lastActionTime = timeGetTime();
 	packUser->m_lastActionX = x;
@@ -143,6 +142,8 @@ BOOL NetPacket_ReqAttack1(User * packUser, PacketBuffer * pPackBuffer)
 	*pPackBuffer >> direction >> x >> y;
 
 	std::list<User*> *sector = &g_Sector[packUser->m_curSector.y][packUser->m_curSector.x];
+
+	packUser->m_action = dfACTION_STAND;
 
 	PacketBuffer pack(15000);
 	
@@ -185,6 +186,8 @@ BOOL NetPacket_ReqAttack2(User * packUser, PacketBuffer * pPackBuffer)
 
 	std::list<User*> *sector = &g_Sector[packUser->m_curSector.y][packUser->m_curSector.x];
 
+	packUser->m_action = dfACTION_STAND;
+
 	PacketBuffer pack(15000);
 
 	MakePacket_Attack2(&pack, packUser);
@@ -225,6 +228,8 @@ BOOL NetPacket_ReqAttack3(User * packUser, PacketBuffer * pPackBuffer)
 	*pPackBuffer >> direction >> x >> y;
 
 	std::list<User*> *sector = &g_Sector[packUser->m_curSector.y][packUser->m_curSector.x];
+
+	packUser->m_action = dfACTION_STAND;
 
 	PacketBuffer pack(15000);
 
@@ -328,6 +333,19 @@ void MakePacket_Sync(PacketBuffer * pack, User * syncUser)
 	pack->Clear();
 	pack->PutData((char *)&packHeader, sizeof(st_PACKET_HEADER));
 	*pack << syncUser->m_uID << syncUser->m_X << syncUser->m_Y << dfNETWORK_PACKET_END;
+}
+
+void MakePacket_Sync(PacketBuffer * pack, DWORD userID, int syncX, int syncY)
+{
+	st_PACKET_HEADER packHeader;
+
+	packHeader.byCode = dfNETWORK_PACKET_CODE;
+	packHeader.bySize = 8;
+	packHeader.byType = dfPACKET_SC_SYNC;
+
+	pack->Clear();
+	pack->PutData((char *)&packHeader, sizeof(st_PACKET_HEADER));
+	*pack << userID << (WORD)syncX << (WORD)syncY << dfNETWORK_PACKET_END;
 }
 
 void MakePacket_CreateMyCharacter(PacketBuffer * pack, User * createUser)
