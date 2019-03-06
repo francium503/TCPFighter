@@ -123,10 +123,6 @@ BOOL NetPacket_ReqMoveStop(User * packUser, PacketBuffer * pPackBuffer)
 	packUser->m_X = x;
 	packUser->m_Y = y;
 
-	if (SectorUpdateUser(packUser)) {
-		UserSectorUpdatePacket(packUser);
-	}
-
 	packUser->m_lastActionTime = timeGetTime();
 	packUser->m_lastActionX = x;
 	packUser->m_lastActionY = y;
@@ -284,7 +280,8 @@ BOOL NetPacket_ReqEcho(User * packUser, PacketBuffer * pPackBuffer)
 
 	pack.Clear();
 	pack.PutData((char *)&packHeader, sizeof(st_PACKET_HEADER));
-	pack << timeGetTime() << dfNETWORK_PACKET_END;
+	pack.PutData(pPackBuffer->GetBufferPtr(), pPackBuffer->GetDataSize());
+	pack << dfNETWORK_PACKET_END;
 
 	Send_Unicast(packUser, &pack);
 

@@ -21,6 +21,8 @@ DWORD g_GameFrameTick = 0;
 DWORD g_GameMonitorTick = 0;
 int g_FrameCount = 0;
 int g_LoopCount = 0;
+int g_LogLevel = 0;  // 나중에 변경 될 수 있게 수정
+
 
 
 
@@ -34,6 +36,8 @@ void UserDisconnect(User* pClient);
 void SocketSet();
 void Monitor();
 void Update();
+void Log(int LogLevel, const WCHAR* fmt, ...);
+
 BOOL CharacterMoveCheck(int x, int y);
 
 
@@ -394,7 +398,7 @@ void Monitor()
 	tm now;
 	localtime_s(&now, &t);
 
-	wprintf(L"[%d-%d-%d %d:%d:%d] Frame %d Loop %d\n", now.tm_year + 1900, now.tm_mon + 1, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec, g_FrameCount, g_LoopCount);
+	Log(0, L"[%d-%d-%d %d:%d:%d] Frame %d Loop %d\n", now.tm_year + 1900, now.tm_mon + 1, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec, g_FrameCount, g_LoopCount);
 
 	g_FrameCount = 0;
 	g_LoopCount = 0;
@@ -517,6 +521,19 @@ void Update()
 				UserSectorUpdatePacket(pUser);
 			}
 		}
+	}
+}
+
+void Log(int LogLevel, const WCHAR* fmt, ...)
+{
+	if (g_LogLevel <= LogLevel) {
+		WCHAR buff[10240];
+		va_list arg;
+		va_start(arg, fmt);
+		wvsprintf(buff, fmt, arg);
+		va_end(arg);
+
+		wprintf(L"%s", buff);
 	}
 }
 

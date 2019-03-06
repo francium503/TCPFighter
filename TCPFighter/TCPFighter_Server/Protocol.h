@@ -378,6 +378,9 @@ struct st_PACKET_HEADER {
 #define dfATTACK2_DAMAGE 3
 #define dfATTACK3_DAMAGE 4
 
-
+#define dfLOG_LEVEL_DEBUG 0
+#define dfLOG_LEVEL_WARNING 1
+#define dfLOG_LEVEL_ERROR 2
+#define dfLOG_LEVEL_NOTICE 3
 
 #endif
