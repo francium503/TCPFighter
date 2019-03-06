@@ -25,6 +25,7 @@ int g_LoopCount = 0;
 int g_PacketProcessCount = 0;
 int g_PacketSendCount = 0;
 int g_DRCount = 0;
+int g_FrameBetweenMS = 0;
 
 std::list<User *> g_UserList;
 std::list<User *> g_Sector[dfSECTOR_MAX_Y][dfSECTOR_MAX_X];
@@ -399,16 +400,18 @@ void Monitor()
 	tm now;
 	localtime_s(&now, &t);
 
-	Log(0, L"[%d-%d-%d %d:%d:%d]\nFrame %d Loop %d\n", now.tm_year + 1900, now.tm_mon + 1, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec, g_FrameCount, g_LoopCount);
+	Log(dfLOG_LEVEL_DEBUG, L"[%d-%d-%d %d:%d:%d]\nFrame %d Loop %d\n", now.tm_year + 1900, now.tm_mon + 1, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec, g_FrameCount, g_LoopCount);
 
 	g_FrameCount = 0;
 	g_LoopCount = 0;
 
-	Log(0, L"Packet process : %d per sec\n", g_PacketProcessCount);
+	Log(dfLOG_LEVEL_DEBUG, L"Max Frame MS : %dms\n", g_FrameBetweenMS);
+	g_FrameBetweenMS = 0;
+	Log(dfLOG_LEVEL_DEBUG, L"Packet process : %d per sec\n", g_PacketProcessCount);
 	g_PacketProcessCount = 0;
-	Log(0, L"Packet send : %d per sec\n", g_PacketSendCount);
+	Log(dfLOG_LEVEL_DEBUG, L"Packet send : %d per sec\n", g_PacketSendCount);
 	g_PacketSendCount = 0;
-	Log(0, L"DR count : %d\n", g_DRCount);
+	Log(dfLOG_LEVEL_DEBUG, L"DR count : %d\n", g_DRCount);
 	g_DRCount = 0;
 }
 
@@ -423,8 +426,11 @@ void Update()
 		return;
 	}
 
+	g_FrameBetweenMS = max(tick - g_GameFrameTick, g_FrameBetweenMS);
+
 	g_FrameCount++;
 	g_GameFrameTick += 20;
+
 
 	User* pUser = nullptr;
 

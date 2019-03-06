@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Log.h"
 
-int g_LogLevel = 0;  // 나중에 변경 될 수 있게 수정
+int g_LogLevel = dfLOG_LEVEL_DEBUG;  // 나중에 변경 될 수 있게 수정
 BOOL g_LogFileWrite = TRUE;
 
 void Log(int LogLevel, const WCHAR* fmt, ...)

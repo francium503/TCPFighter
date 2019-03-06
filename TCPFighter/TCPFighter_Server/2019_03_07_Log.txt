@@ -2312,3 +2312,141 @@ Packet send : 0 per sec
 Frame 50 Loop 305265
 Packet process : 0 per sec
 Packet send : 0 per sec
+[2019-3-7 6:55:3]
+Frame 1 Loop 1
+Max Frame MS : 0ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
+[2019-3-7 6:55:4]
+Frame 50 Loop 286727
+Max Frame MS : 13ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
+[2019-3-7 6:55:5]
+Frame 50 Loop 305749
+Max Frame MS : 5ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
+[2019-3-7 6:55:6]
+Frame 50 Loop 314107
+Max Frame MS : 3ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
+[2019-3-7 6:55:7]
+Frame 50 Loop 303094
+Max Frame MS : 10ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
+[2019-3-7 6:55:8]
+Frame 50 Loop 310053
+Max Frame MS : 6ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
+[2019-3-7 6:55:9]
+Frame 50 Loop 307737
+Max Frame MS : 8ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
+[2019-3-7 6:55:10]
+Frame 50 Loop 309674
+Max Frame MS : 6ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
+[2019-3-7 6:55:11]
+Frame 50 Loop 309877
+Max Frame MS : 5ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
+[2019-3-7 6:55:12]
+Frame 50 Loop 310643
+Max Frame MS : 5ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
+[2019-3-7 6:55:13]
+Frame 50 Loop 307681
+Max Frame MS : 4ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
+[2019-3-7 6:55:14]
+Frame 50 Loop 310778
+Max Frame MS : 5ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
+[2019-3-7 6:55:28]
+Frame 1 Loop 1
+Max Frame MS : 20ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
+[2019-3-7 6:55:29]
+Frame 50 Loop 306801
+Max Frame MS : 37ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
+[2019-3-7 6:55:30]
+Frame 50 Loop 314564
+Max Frame MS : 24ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
+[2019-3-7 6:55:31]
+Frame 50 Loop 312158
+Max Frame MS : 30ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
+[2019-3-7 6:55:32]
+Frame 50 Loop 304394
+Max Frame MS : 25ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
+[2019-3-7 6:55:33]
+Frame 50 Loop 303800
+Max Frame MS : 25ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
+[2019-3-7 6:55:34]
+Frame 50 Loop 311772
+Max Frame MS : 29ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
+[2019-3-7 6:55:35]
+Frame 50 Loop 315980
+Max Frame MS : 25ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
+[2019-3-7 6:55:36]
+Frame 50 Loop 312797
+Max Frame MS : 26ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
+[2019-3-7 6:55:37]
+Frame 50 Loop 315873
+Max Frame MS : 25ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
+[2019-3-7 6:55:38]
+Frame 50 Loop 311439
+Max Frame MS : 25ms
+Packet process : 0 per sec
+Packet send : 0 per sec
+DR count : 0
