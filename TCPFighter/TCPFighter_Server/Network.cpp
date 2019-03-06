@@ -522,12 +522,8 @@ void UserSectorUpdatePacket(User * pUser)
 		Send_Sector(&pack, addSec.Around[cnt].x, addSec.Around[cnt].y);
 	}
 
-	if (pUser->m_action == dfACTION_STAND)
-		MakePacket_MoveStop(&pack, pUser);
-	else {
-		MakePacket_MoveStart(&pack, pUser);
-	}
-	
+	MakePacket_MoveStart(&pack, pUser);
+
 	for (cnt = 0; cnt < addSec.Count; ++cnt) {
 		Send_Sector(&pack, addSec.Around[cnt].x, addSec.Around[cnt].y);
 	}
@@ -558,11 +554,6 @@ void UserSectorUpdatePacket(User * pUser)
 					break;
 
 				case dfACTION_STAND:
-					MakePacket_MoveStop(&pack, pExistUser);
-
-					Send_Unicast(pUser, &pack);
-					break;
-
 				case dfACTION_ATTACK1:
 				case dfACTION_ATTACK2:
 				case dfACTION_ATTACK3:
