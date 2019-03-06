@@ -280,13 +280,11 @@ BOOL NetPacket_ReqEcho(User * packUser, PacketBuffer * pPackBuffer)
 
 	packHeader.byCode = dfNETWORK_PACKET_CODE;
 	packHeader.bySize = 4;
-	packHeader.byType = (BYTE)(253);
+	packHeader.byType = dfPACKET_SC_ECHO;
 
 	pack.Clear();
 	pack.PutData((char *)&packHeader, sizeof(st_PACKET_HEADER));
-	pack.PutData(pPackBuffer->GetBufferPtr(), pPackBuffer->GetDataSize());
-
-	pack << dfNETWORK_PACKET_END;
+	pack << timeGetTime() << dfNETWORK_PACKET_END;
 
 	Send_Unicast(packUser, &pack);
 

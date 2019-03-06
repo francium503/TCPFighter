@@ -71,7 +71,7 @@ BOOL SectorUpdateUser(User * pUser)
 	pUser->m_oldSector.x = beforeSectorX;
 	pUser->m_oldSector.y = beforeSectorY;
 
-	/*
+#ifdef __DEBUG__
 	for (int x = 0; x < dfSECTOR_MAX_X; ++x) {
 		for (int y = 0; y < dfSECTOR_MAX_Y; ++y) {
 			if (g_Sector[y][x].size() != 0) {
@@ -81,8 +81,7 @@ BOOL SectorUpdateUser(User * pUser)
 			}
 		}
 	}
-
-	*/
+#endif
 
 	return true;
 }

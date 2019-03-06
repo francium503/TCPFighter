@@ -191,7 +191,7 @@ BOOL PacketProcess(User * pPacketUser, st_PACKET_HEADER packHeader)
 		//return NetPacket_ReqSync(pPacketUser, &pack);
 		//break;
 
-	case (BYTE)(252) :
+	case dfPACKET_CS_ECHO :
 		return NetPacket_ReqEcho(pPacketUser, &pack);
 		break;
 
