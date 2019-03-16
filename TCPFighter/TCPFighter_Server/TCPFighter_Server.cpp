@@ -77,7 +77,7 @@ int main()
 		return -63;
 	}
 
-	retval = listen(g_ListenSocket, 0);
+	retval = listen(g_ListenSocket, SOMAXCONN);
 
 	if (retval == SOCKET_ERROR) {
 		std::cout << GetLastError() << std::endl;
